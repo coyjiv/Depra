@@ -7,13 +7,14 @@ import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
+import { i18n } from "../i18n";
 
 const Signup = () => {
     const navigation = useNavigation();
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Некорректный эмейл').required('Почта обязательна'),
-        password: Yup.string().min(8, 'Пароль слишком маленький').required('Пароль обязателен')
+        email: Yup.string().email(i18n.t('signup.incorrectEmail')).required(i18n.t('signup.requiredEmail')),
+        password: Yup.string().min(8, i18n.t('signup.shortPassword')).required(i18n.t('signup.requiredPassword'))
     })
     const formik = useFormik({
         initialValues: {
@@ -32,7 +33,7 @@ const Signup = () => {
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    Alert.alert('Error', errorMessage)
+                    Alert.alert(i18n.t('errors.error'), `${i18n.t(`errors.${errorCode}`)}`);
                     // ..
                 });
         },
@@ -47,21 +48,21 @@ const Signup = () => {
             <Layout style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 30 }}>
                 <Text category="h1" style={{ fontWeight: '900', fontSize: 45 }}>Depra</Text>
 
-                <Text category="h2" style={{ fontWeight: '300' }} >Регистрация нового пользователя</Text>
+                <Text category="h2" style={{ fontWeight: '300' }} >{i18n.t('signup.title')}</Text>
                 <Layout style={{ marginTop: 50 }}>
                     <Input
-                        label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10 }}>Почта</Text>}
+                        label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10 }}>{i18n.t('signup.email')}</Text>}
                         size="large"
-                        placeholder='Enter your email'
+                        placeholder={i18n.t('signup.emailPlaceholder')}
                         value={formik.values.email}
                         onChangeText={nextValue => formik.setFieldValue('email', nextValue)}
                     />
                     {formik.errors.email ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.email}</Text> : null}
 
                     <Input
-                        label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10, marginTop: 20 }}>Пароль</Text>}
+                        label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10, marginTop: 20 }}>{i18n.t('signup.password')}</Text>}
                         size="large"
-                        placeholder='Enter your password'
+                        placeholder={i18n.t('signup.passwordPlaceholder')}
                         secureTextEntry
                         value={formik.values.password}
                         onChangeText={nextValue => formik.setFieldValue('password', nextValue)}
@@ -74,9 +75,9 @@ const Signup = () => {
                         status='primary'
                         onPress={() => navigation.navigate('Login' as never)}
                     >
-                        {() => <Text>Уже есть <Text style={{ textDecorationLine: 'underline' }}>аккаунт</Text>? Войдите в <Text style={{ fontWeight: '900' }}>НЕГО</Text>!</Text>}
+                        {() => <Text>{i18n.t('signup.already_have_account')}</Text>}
                     </Button>
-                    <Button style={{ marginTop: 50 }} onPress={formik.handleSubmit as any}>Зайти</Button>
+                    <Button style={{ marginTop: 50 }} onPress={formik.handleSubmit as any}>{i18n.t('signup.button_signup')}</Button>
                 </Layout>
             </Layout>
         </SafeAreaView>

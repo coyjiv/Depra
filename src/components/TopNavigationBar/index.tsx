@@ -13,6 +13,7 @@ import { TouchableWebElement } from '@ui-kitten/components/devsupport';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
+import { i18n } from '../../i18n';
 
 const BackIcon = (props): IconElement => (
     <Icon
@@ -21,24 +22,10 @@ const BackIcon = (props): IconElement => (
     />
 );
 
-const EditIcon = (props): IconElement => (
-    <Icon
-        {...props}
-        name='edit'
-    />
-);
-
 const MenuIcon = (props): IconElement => (
     <Icon
         {...props}
         name='more-vertical'
-    />
-);
-
-const InfoIcon = (props): IconElement => (
-    <Icon
-        {...props}
-        name='info'
     />
 );
 
@@ -75,16 +62,12 @@ export const TopNavigationBar = ({ title, subtitle }): React.ReactElement => {
                 onBackdropPress={toggleMenu}
             >
                 <MenuItem
-                    accessoryLeft={InfoIcon}
-                    title='About'
-                />
-                <MenuItem
                     onPress={() => {
                         signOut(auth).then(() => {
                             console.log("Logged out successfully");
 
                         }).catch((error) => {
-                            Alert.alert('Error', error.message, [ { text: 'OK' } ], { cancelable: true });
+                            Alert.alert(i18n.t('errors.error'), error.message, [ { text: 'OK' } ], { cancelable: true });
                         });
                     }}
                     accessoryLeft={LogoutIcon}
@@ -107,7 +90,6 @@ export const TopNavigationBar = ({ title, subtitle }): React.ReactElement => {
                 alignment='center'
                 title={title ?? false}
                 subtitle={subtitle ?? false}
-                // accessoryLeft={renderBackAction}
                 accessoryRight={renderRightActions}
             />
         </Layout>

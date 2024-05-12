@@ -24,6 +24,14 @@ import Signup from './src/views/Signup';
 import Test from './src/views/Test';
 import MoodScreen from './src/views/MoodScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { i18n } from './src/i18n';
+import * as Localization from 'expo-localization';
+
+i18n.locale = Localization.locale;
+// i18n.locale = 'en';
+
+i18n.enableFallback = true;
+i18n.defaultLocale = "en"
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,9 +45,9 @@ const AuthStack = () => (
 
 const BottomTabBar = ({ navigation, state }) => (
   <BottomNavigation selectedIndex={state.index} onSelect={index => navigation.navigate(state.routeNames[ index ])}>
-    <BottomNavigationTab title="Дневник настроения" />
-    <BottomNavigationTab title="Тест" />
-    <BottomNavigationTab title="Прогрес" />
+    <BottomNavigationTab title={i18n.t('tabs.moodDiary')} />
+    <BottomNavigationTab title={i18n.t('tabs.test')} />
+    <BottomNavigationTab title={i18n.t('tabs.progress')} />
   </BottomNavigation>
 );
 
