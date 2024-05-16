@@ -40,22 +40,20 @@ export const DistortionPicker = (): React.ReactElement => {
     );
 
     return (
-        <TouchableWithoutFeedback style={{ backgroundColor: 'red' }} onPress={() => {
-            // Закрытие клавиатуры
+        <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
-            // Любые другие действия, например, сброс фокуса с TextInput
             inputRef.current.blur();
         }}>
-            <Layout>
+            <Layout style={{ marginTop: 25 }}>
                 <Input
-                    placeholder='Place your Text'
+                    placeholder='Distortion picker'
                     value={value}
                     onChangeText={onChangeText}
                     onPressOut={() => setPanelVisible(false)}
                     ref={inputRef}
                 />
                 {panelVisible && data.length > 0 && <Card>
-                    <ScrollView style={{ maxHeight: 200 }}>
+                    <ScrollView keyboardShouldPersistTaps='handled' style={{ maxHeight: 200 }}>
                         <Layout>
                             {data.map(renderOption)}
                         </Layout>
