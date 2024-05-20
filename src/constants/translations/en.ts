@@ -41,11 +41,18 @@ export const en = {
         today: "Today is",
         newEntry: "New entry",
         addEntry: "Add entry",
+        editEntry: "Edit entry",
         emotionsBefore: "Emotions before",
         emotionsAfter: "Emotions after",
         automaticThoughts: "Automatic thoughts",
         cognitiveDistortions: "Cognitive distortions",
         rationalResponse: "Rational response",
+        viewRecord: "View record",
+        editRecord: "Edit record",
+        noRecordsTitle: "No records for today",
+        noRecordsText: "Start by adding a new entry",
+        before: 'Before',
+        after: 'After',
         emotions: [
             "Indifference", "Helplessness", "Impotence", "Inspiration", "Guilt", "Outrage", "Excitement", "Enthusiasm", "Ecstasy", "Admiration",
             "Arrogance", "Anger", "Pride", "Sadness", "Annoyance", "Pity", "Care", "Envy", "Interest", "Fawning", "Confusion",
@@ -55,10 +62,11 @@ export const en = {
             "Caution", "Revulsion", "Horror", "Detachment", "Aloofness", "Despair", "Stupor", "Sorrow", "Whining", "Depression",
             "Suspicion", "Submissiveness", "Patronizing", "Impulse", "Lostness", "Superiority", "Anticipation", "Contempt",
             "Disdain", "Inquisitiveness", "Joy", "Irritation", "Distractedness", "Confusion", "Zeal", "Sarcasm", "Grief", "Boredom", "Laughter",
-            "Embarrassment", "Confusion", "Collectedness", "Regret", "Calm", "Timidity", "Suffering", "Fear", "Aspiration", "Shame", "Anxiety",
+            "Embarrassment", "Confusion", "Regret", "Calm", "Timidity", "Suffering", "Fear", "Aspiration", "Shame", "Anxiety",
             "Tremor", "Fascination", "Surprise", "Satisfaction", "Pleasure", "Dejection", "Tenderness", "Peacefulness", "Despondency", "Persistence",
             "Fatigue", "Regality", "Euphoria", "Exaltation", "Ecstasy", "Vigor", "Enthusiasm", "Fury"
-        ]
+        ],
+        distortionsList: [ "All-or-Nothing Thinking", "Overgeneralization", "Mental Filters", "Discounting the Positive", "Jumping to Conclusions", "Magnification", "Emotional Reasoning", "\"Should\" Statements", "Labeling", "Personalization and Blame" ]
     },
     test: {
         testOptions: [ 'Not at all', 'A little', 'Moderately', 'Very', 'Extremely' ],

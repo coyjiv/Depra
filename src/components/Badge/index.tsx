@@ -1,15 +1,16 @@
-import { Icon, Layout, Text } from '@ui-kitten/components'
+import { Icon, Layout, Text, useTheme } from '@ui-kitten/components'
 import React, { useState } from 'react'
-import { StyleSheet, TouchableNativeFeedback } from 'react-native'
+import { Dimensions, StyleSheet, TouchableNativeFeedback } from 'react-native'
 import Slider from '@react-native-community/slider';
 
-const Badge = ({ title, onCross, emotionPercentage, onEmotionPercentageChange }) => {
+const Badge = ({ title, onCross, emotionPercentage, onBadgePercentageChange, withBadgePercentage = false }) => {
 
+    const theme = useTheme();
 
     return (
         <Layout style={styles.badgeWrapper}>
             <Layout style={styles.badge}>
-                <Text>{title}</Text>
+                <Text style={{ fontSize: 18 }}>{title}</Text>
                 <TouchableNativeFeedback onPress={onCross}>
                     <Icon
                         style={styles.icon}
@@ -18,20 +19,20 @@ const Badge = ({ title, onCross, emotionPercentage, onEmotionPercentageChange })
                     />
                 </TouchableNativeFeedback>
             </Layout>
-            <Layout style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 }}>
+            {withBadgePercentage && <Layout style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 10 }}>
                 <Slider
-                    style={{ width: 200, height: 40 }}
+                    style={{ width: Dimensions.get('screen').width - 100, height: 40 }}
                     minimumValue={0}
                     maximumValue={1}
                     value={emotionPercentage}
-                    onSlidingComplete={(value) => onEmotionPercentageChange({ title, emotionPercentage: value })}
-                    // onValueChange={(value) => onEmotionPercentageChange({ title, emotionPercentage: value })}
-                    minimumTrackTintColor="#FFFFFF"
+                    onSlidingComplete={(value) => onBadgePercentageChange({ title, emotionPercentage: value })}
+                    // onValueChange={(value) => onBadgePercentageChange({ title, emotionPercentage: value })}
+                    minimumTrackTintColor={theme[ 'color-primary-400' ]}
                     maximumTrackTintColor="#000000"
-                    thumbTintColor='#8F9BB3'
+                    thumbTintColor={theme[ 'color-primary-500' ]}
                 />
-                <Text>{(emotionPercentage * 100).toFixed() + '%'}</Text>
-            </Layout>
+                <Text style={{ fontSize: 16 }}>{(emotionPercentage * 100).toFixed() + '%'}</Text>
+            </Layout>}
         </Layout>
     )
 }

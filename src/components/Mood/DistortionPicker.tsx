@@ -1,65 +1,16 @@
-import React, { useCallback, useRef } from 'react';
-import { Input, Layout, Card, AutocompleteItem, Text } from '@ui-kitten/components';
+import React, { useState } from 'react';
 import { i18n } from '../../i18n';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Autocomplete } from '../Autocomplete';
 
-const emotions = (i18n.t('mood.emotions') as string[]).map(el => ({ title: el }));
+export const DistortionPicker = ({ placeholder, selected, onSelect, onRemove }): React.ReactElement => {
+    const distortions = (i18n.t('mood.distortionsList') as string[]).map(el => ({ title: el }));
 
-const filter = (item, query): boolean => item.title.toLowerCase().includes(query.toLowerCase());
-
-export const DistortionPicker = (): React.ReactElement => {
-    const [ panelVisible, setPanelVisible ] = React.useState(false);
-
-    const inputRef = useRef(null);
-
-    const [ value, setValue ] = React.useState(null);
-    const [ data, setData ] = React.useState(emotions);
-
-    const onSelect = useCallback((index): void => {
-        setValue(data[ index ].title);
-    }, [ data ]);
-
-    const onChangeText = (query): void => {
-        setValue(query);
-        setData(emotions.filter(item => filter(item, query)));
-        if (!panelVisible && query.length > 0) {
-            setPanelVisible(true)
-        } else {
-            setPanelVisible(false)
-        }
+    const [ distortionText, setDistortionText ] = useState('');
+    const handleOnChange = (value) => {
+        setDistortionText(value)
     }
 
-    const renderOption = (item, index): React.ReactElement => (
-        <AutocompleteItem
-            // style={{ backgroundColor: 'red' }}
-            onPress={() => onSelect(index)}
-            key={index}
-            title={item.title}
-        />
-    );
-
     return (
-        <TouchableWithoutFeedback onPress={() => {
-            Keyboard.dismiss();
-            inputRef.current.blur();
-        }}>
-            <Layout style={{ marginTop: 25 }}>
-                <Input
-                    placeholder='Distortion picker'
-                    value={value}
-                    onChangeText={onChangeText}
-                    onPressOut={() => setPanelVisible(false)}
-                    ref={inputRef}
-                />
-                {panelVisible && data.length > 0 && <Card>
-                    <ScrollView keyboardShouldPersistTaps='handled' style={{ maxHeight: 200 }}>
-                        <Layout>
-                            {data.map(renderOption)}
-                        </Layout>
-                    </ScrollView>
-                </Card>}
-            </Layout>
-        </TouchableWithoutFeedback>
+        <Autocomplete withBadges placeholder={placeholder} selected={selected} onSelect={onSelect} onRemove={onRemove} options={distortions} inputValue={distortionText} onInputValueChange={handleOnChange} />
     );
 };

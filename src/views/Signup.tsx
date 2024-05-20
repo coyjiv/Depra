@@ -26,7 +26,7 @@ const Signup = () => {
             createUserWithEmailAndPassword(auth, values.email, values.password).then((userCredential) => {
                 // Signed up 
                 const user = userCredential.user;
-                console.log(user);
+                // console.log(user);
                 navigation.navigate('Schedule' as never)
                 // ...
             })

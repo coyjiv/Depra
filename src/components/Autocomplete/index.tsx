@@ -5,9 +5,26 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Badge from '../Badge';
 
-const filter = (item, query): boolean => item.title.toLowerCase().includes(query.toLowerCase());
+const filter = (item, query, existing = []): boolean => {
+    const queryLower = query.toLowerCase();
+    const isNotSelected = !existing.some(el => el.title.toLowerCase() === item.title.toLowerCase());
+    return isNotSelected && item.title.toLowerCase().includes(queryLower);
+};
 
-export const Autocomplete = ({ options: data, placeholder, selected = [], onSelect, onRemove, inputValue, onInputValueChange, onEmotionUpdate }): React.ReactElement => {
+type AutocompleteProps = {
+    options: { title: string, emotionPercentage?: number }[];
+    placeholder: string;
+    selected: { title: string, emotionPercentage: number }[];
+    onSelect: (item: { title: string, emotionPercentage?: number }) => void;
+    onRemove: (item: { title: string, emotionPercentage?: number }) => void;
+    inputValue: string;
+    onInputValueChange: (value: string) => void;
+    onBadgeUpdate?: (item: { title: string, emotionPercentage?: number }) => void;
+    withBadges?: boolean;
+    withBadgePercentage?: boolean;
+}
+
+export const Autocomplete = ({ options: data, placeholder, selected = [], onSelect, onRemove, inputValue, onInputValueChange, onBadgeUpdate, withBadges = true, withBadgePercentage = false }): React.ReactElement<AutocompleteProps> => {
     const [ panelVisible, setPanelVisible ] = React.useState(false);
     const [ options, setOptions ] = React.useState(data);
 
@@ -21,18 +38,18 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
 
     const onChangeText = (query): void => {
         onInputValueChange(query);
-        // filter
-
-        const filteredData = data.filter(item => filter(item, query));
+        // Filter out selected items and those not matching the query
+        const filteredData = data.filter(item => filter(item, query, selected));
         setOptions(filteredData);
-        if (!panelVisible && query.length > 0) {
-            setPanelVisible(true)
+        if (query.length > 0) {
+            setPanelVisible(true);
         } else {
-            setPanelVisible(false)
+            setPanelVisible(false);
         }
     }
 
-    console.log('selected ', selected);
+
+    // console.log('selected ', selected);
 
 
 
@@ -50,6 +67,7 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
         // <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <Layout style={{ marginTop: 25 }}>
             <Input
+                textStyle={{ fontSize: 18 }}
                 placeholder={placeholder}
                 value={inputValue}
                 onChangeText={onChangeText}
@@ -63,10 +81,10 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
                     </Layout>
                 </ScrollView>
             </Card>}
-            {selected.length > 0 &&
+            {withBadges && selected.length > 0 &&
                 <Layout>
                     {selected.map((item, index) => (
-                        <Badge emotionPercentage={item.emotionPercentage} onEmotionPercentageChange={(item) => onEmotionUpdate(item)} onCross={() => onRemove(item)} key={index} title={item.title} />))}
+                        <Badge withBadgePercentage={withBadgePercentage} emotionPercentage={item.emotionPercentage} onBadgePercentageChange={(item) => onBadgeUpdate && onBadgeUpdate(item)} onCross={() => onRemove(item)} key={index} title={item.title} />))}
                 </Layout>}
         </Layout>
         // </TouchableWithoutFeedback>

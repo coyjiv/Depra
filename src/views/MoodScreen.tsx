@@ -8,32 +8,29 @@ import InfinitePager from 'react-native-infinite-pager'
 import { Page } from "../components/Mood/Page";
 import { TopNavigationBar } from "../components/TopNavigationBar";
 import { i18n } from "../i18n";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { MoodCreationModal } from "../components/Mood/MoodCreationModal";
+import MoodForm from "../components/Mood/MoodForm";
+import ViewRecord from "../components/Mood/ViewRecord";
+import { MoodData, MoodDoc } from "../../types";
+import { commonStyles } from "../styles/common";
 
 
+type RootStackParamList = {
+    Home: undefined;
+    ViewRecord: { mood: MoodDoc };
+};
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const MoodScreen = () => {
-    const [ selectedDate, setSelectedDate ] = useState(moment());
-
-    const handleSelect = (index) => {
-        setSelectedDate(moment().add(index, 'days'));
-    };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Divider />
-            <TopNavigationBar />
-            <Layout>
-                <Text style={styles.heading}>{i18n.t('tabs.moodDiary')}</Text>
-                <InfinitePager
-                    PageComponent={Page}
-
-                    style={styles.flex}
-                    pageWrapperStyle={styles.flex}
-                    onPageChange={handleSelect}
-                />
-            </Layout>
-        </SafeAreaView>
+        <Stack.Navigator>
+            <Stack.Screen options={{ headerShown: false }} name="Home" component={MoodScreenHome} />
+            <Stack.Screen name="ViewRecord" options={{ headerTitle: i18n.t('mood.viewRecord') }} component={ViewRecord} />
+        </Stack.Navigator>
     )
+
 }
 
 const styles = StyleSheet.create({
@@ -47,3 +44,28 @@ const styles = StyleSheet.create({
 });
 
 export default MoodScreen
+
+
+export const MoodScreenHome = () => {
+    const [ selectedDate, setSelectedDate ] = useState(moment());
+
+    const handleSelect = (index) => {
+        setSelectedDate(moment().add(index, 'days'));
+    };
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <Divider />
+            <TopNavigationBar />
+            <Layout style={{ padding: 0 }}>
+                <Text category="h1" style={commonStyles.heading}>{i18n.t('tabs.moodDiary')}</Text>
+                <InfinitePager
+                    PageComponent={Page}
+
+                    style={styles.flex}
+                    pageWrapperStyle={styles.flex}
+                    onPageChange={handleSelect}
+                />
+            </Layout>
+        </SafeAreaView>
+    )
+}

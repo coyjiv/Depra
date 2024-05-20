@@ -5,7 +5,7 @@ const FloatingButton = (props: ButtonProps) => {
     return (
         <Button {...props} style={{
             position: 'absolute',
-            bottom: 100,
+            bottom: 80,
             right: 20,
             zIndex: 1,
             borderRadius: 50,
