@@ -1,6 +1,6 @@
 // App.js
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, Text, View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 import Settings from './src/views/Settings';
 import { ApplicationProvider, BottomNavigation, BottomNavigationTab, IconRegistry, Layout } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
@@ -9,10 +9,16 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { EvaIconsPack } from '@ui-kitten/eva-icons';
-import { ViewPager } from '@ui-kitten/components';
+import { Text } from '@ui-kitten/components';
 import 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
-import { useFonts, PatrickHand_400Regular, } from '@expo-google-fonts/patrick-hand';
+import {
+  useFonts,
+  PTSans_400Regular,
+  PTSans_400Regular_Italic,
+  PTSans_700Bold,
+  PTSans_700Bold_Italic,
+} from '@expo-google-fonts/pt-sans';
 import { Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold, Nunito_800ExtraBold } from '@expo-google-fonts/nunito';
 import { default as customMapping } from './ui-kitten-custom-mapping.json';
 
@@ -31,9 +37,10 @@ import MoodScreen from './src/views/MoodScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { i18n } from './src/i18n';
 import * as Localization from 'expo-localization';
+import { LocaleProvider } from './src/context/LocaleContext';
 
 i18n.locale = Localization.locale;
-// i18n.locale = 'en';
+// i18n.locale = 'ua';
 
 i18n.enableFallback = true;
 i18n.defaultLocale = "en"
@@ -61,9 +68,9 @@ const BottomTabBar = ({ navigation, state }) => (
 
 const AppTabs = () => (
   <Tab.Navigator screenOptions={{ headerShown: false }} tabBar={props => <BottomTabBar {...props} />}>
-    <Tab.Screen name="Дневник настроения" component={MoodScreen} />
-    <Tab.Screen name="Тест" component={Test} />
-    <Tab.Screen name="Прогрес" component={Stats} />
+    <Tab.Screen name="MoodDiary" component={MoodScreen} />
+    <Tab.Screen name="TestRoot" component={Test} />
+    <Tab.Screen name="Progress" component={Stats} />
   </Tab.Navigator>
 );
 
@@ -71,7 +78,10 @@ export default function App() {
 
 
   let [ fontsLoaded ] = useFonts({
-    PatrickHand_400Regular,
+    PTSans_400Regular,
+    PTSans_400Regular_Italic,
+    PTSans_700Bold,
+    PTSans_700Bold_Italic,
     Nunito_400Regular,
     Nunito_500Medium,
     Nunito_600SemiBold,
@@ -86,13 +96,6 @@ export default function App() {
     const unsubscribe = onAuthStateChanged(auth, setUser);
     return () => unsubscribe();
   }, []);
-
-  const theme = {
-    ...eva.light,
-    'text-font-family': 'PatrickHand_400Regular',
-    'text-heading-1-font-family': 'Nunito_700Bold',
-    'text-heading-5-font-family': 'Nunito_400Regular',
-  };
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -112,16 +115,20 @@ export default function App() {
 
 
   return (
-    <ApplicationProvider {...eva} theme={theme} customMapping={customMapping}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <IconRegistry icons={EvaIconsPack} />
-        <NavigationContainer>
-          <RootStack.Navigator>
-            <RootStack.Screen name="Main" component={user ? AppTabs : AuthStack} options={{ headerShown: false }} />
-            <RootStack.Screen name="Settings" component={Settings} />
-          </RootStack.Navigator>
-        </NavigationContainer>
-      </GestureHandlerRootView>
-    </ApplicationProvider>
+    <LocaleProvider>
+      <ApplicationProvider {...eva} theme={eva.light} customMapping={customMapping}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <IconRegistry icons={EvaIconsPack} />
+          <NavigationContainer>
+            <RootStack.Navigator>
+              <RootStack.Screen name="Main" component={user ? AppTabs : AuthStack} options={{ headerShown: false }} />
+              <RootStack.Screen name="Settings" options={{
+                headerTitle: () => (<Text>Settings</Text>)
+              }} component={Settings} />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </GestureHandlerRootView>
+      </ApplicationProvider>
+    </LocaleProvider>
   );
 }

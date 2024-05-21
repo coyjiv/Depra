@@ -11,7 +11,7 @@
   "dependencies": {
     "@eva-design/eva": "^2.2.0",
     "@expo-google-fonts/nunito": "^0.2.3",
-    "@expo-google-fonts/patrick-hand": "^0.2.3",
+    "@expo-google-fonts/pt-sans": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-community/slider": "4.4.2",
     "@react-navigation/bottom-tabs": "^6.5.20",
@@ -24,6 +24,7 @@
     "expo-font": "~11.10.3",
     "expo-localization": "~14.8.4",
     "expo-notifications": "~0.27.7",
+    "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
     "firebase": "^10.11.1",
     "formik": "^2.4.6",
@@ -34,6 +35,7 @@
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-calendars": "^1.1304.1",
+    "react-native-collapsible": "^1.6.1",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-infinite-pager": "^0.3.16",
     "react-native-keyboard-spacer": "^0.4.1",
@@ -43,8 +45,7 @@
     "react-native-screens": "~3.29.0",
     "react-native-svg": "14.1.0",
     "yup": "^1.4.0",
-    "zustand": "^4.5.2",
-    "expo-splash-screen": "~0.26.5"
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

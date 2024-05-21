@@ -35,8 +35,8 @@ const Mood = ({ mood: moodDoc }: { mood: MoodDoc }) => {
             mood: moodDoc
         })}>
             <Layout style={styles.card}>
-                <Text numberOfLines={1} style={{ fontWeight: '700', fontSize: 18, marginTop: 10 }}>{i18n.t('mood.automaticThoughts')}: {mood.automaticThoughts}</Text>
-                <Text numberOfLines={1} style={{ fontWeight: '700', fontSize: 18, marginBottom: 10 }}>{i18n.t('mood.rationalResponse')}: {mood.rationalResponse}</Text>
+                <Text category='h1' numberOfLines={1} style={{ fontWeight: '600', fontSize: 18, marginTop: 10 }}>{i18n.t('mood.automaticThoughts')}: {mood.automaticThoughts}</Text>
+                <Text category='h1' numberOfLines={1} style={{ fontWeight: '600', fontSize: 18, marginBottom: 10 }}>{i18n.t('mood.rationalResponse')}: {mood.rationalResponse}</Text>
                 <Layout style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
                     <Text>{i18n.t('mood.before')}: </Text>
                     {mood.emotionsBefore.map((emotion, index, array) => (

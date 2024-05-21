@@ -1,32 +1,71 @@
 {
-    "strict": {
-      "text-font-family": "Nunito_400Regular",
-      "text-heading-5-font-family": "Nunito_500Medium",
-      
-      "text-heading-1-font-family": "PatrickHand_400Regular",
-      "text-heading-1-font-size": 36,
-      "text-heading-1-font-weight": "400",
-
-
-    
-
+  "strict": {
+    "button-border-radius": 20,
+    "input-border-radius": 20,
+    "text-font-family": "PTSans_400Regular",
+    "text-heading-5-font-family": "Nunito_500Medium",
+    "text-heading-1-font-family": "Nunito_600SemiBold",
+    "text-heading-1-font-size": 36,
+    "text-heading-1-font-weight": "600",
+    "text-heading-2-font-family": "Nunito_600SemiBold",
+    "text-heading-2-font-size": 32,
+    "text-heading-2-font-weight": "600",
+    "text-button-font-family": "PTSans_400Regular",
     "text-subtitle-1-font-size": 15,
-    "text-subtitle-1-font-weight": "600",
-    "text-subtitle-1-font-family": "Nunito_600SemiBold",
-    
-
+    "text-subtitle-1-font-weight": "500",
+    "text-subtitle-1-font-family": "Nunito_500Medium",
     "text-paragraph-1-font-size": 15,
     "text-paragraph-1-font-weight": "400",
-    "text-paragraph-1-font-family": "Nunito_400Regular",
-    
-
+    "text-paragraph-1-font-family": "PTSans_400Regular",
     "text-caption-1-font-size": 12,
     "text-caption-1-font-weight": "400",
-    "text-caption-1-font-family": "Nunito_400Regular",
-
+    "text-caption-1-font-family": "PTSans_400Regular",
     "text-label-font-size": 12,
     "text-label-font-weight": "400",
-    "text-label-font-family": "PatrickHand_400Regular"
+    "text-label-font-family": "PTSans_400Regular"
+  },
+  "components": {
+    "Button": {
+      "meta": {
+        "scope": "all",
+        "parameters": {
+          "borderRadius": {
+            "type": "number"
+          }
+        },
+        "appearances": {
+          "filled": {
+            "mapping": {
+              "borderRadius": "button-border-radius"
+            }
+          },
+          "outline": {
+            "mapping": {
+              "borderRadius": "button-border-radius"
+            }
+          },
+          "ghost": {
+            "mapping": {
+              "borderRadius": "button-border-radius"
+            }
+          }
+        }
+      }
+    },
+    "Input": {
+      "meta": {
+        "scope": "all",
+        "parameters": {
+          "borderRadius": {
+            "type": "number"
+          }
+        },
+        "default": {
+          "mapping": {
+            "borderRadius": "input-border-radius"
+          }
+        }
+      }
     }
   }
-  
+}

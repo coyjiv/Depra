@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import MoodForm from './MoodForm'
 import { Dimensions, StyleSheet } from 'react-native'
-import { Button, Card, Layout, Text } from '@ui-kitten/components'
+import { Card, Layout, Text } from '@ui-kitten/components'
 import { i18n } from '../../i18n'
 import { ScrollView } from 'react-native-gesture-handler'
 import { MoodData, MoodDoc } from '../../../types'
+import { commonStyles } from '../../styles/common'
+import Button from '../Button'
 
 const ViewRecord = ({ route, navigation }) => {
     const { mood } = route.params
@@ -20,7 +22,7 @@ const ViewCard = ({ mood, toggleEditing }: { mood: MoodData, toggleEditing: Reac
     return (
         <Card disabled={true} style={styles.container}>
             <ScrollView keyboardShouldPersistTaps={'handled'} style={styles.formWrapper}>
-                <Text style={styles.subheading}>
+                <Text style={commonStyles.subheading}>
                     {i18n.t('mood.emotionsBefore')}
                 </Text>
 
@@ -31,13 +33,13 @@ const ViewCard = ({ mood, toggleEditing }: { mood: MoodData, toggleEditing: Reac
                 </Layout>
 
 
-                <Text style={styles.subheading}>
+                <Text style={commonStyles.subheading}>
                     {i18n.t('mood.automaticThoughts')}
                 </Text>
 
                 <Text style={{ fontSize: 20, marginHorizontal: 20, marginTop: 20 }}>{mood.automaticThoughts}</Text>
 
-                <Text style={styles.subheading}>
+                <Text style={commonStyles.subheading}>
                     {i18n.t('mood.cognitiveDistortions')}
                 </Text>
 
@@ -47,13 +49,13 @@ const ViewCard = ({ mood, toggleEditing }: { mood: MoodData, toggleEditing: Reac
                     ))}
                 </Layout>
 
-                <Text style={styles.subheading}>
+                <Text style={commonStyles.subheading}>
                     {i18n.t('mood.rationalResponse')}
                 </Text>
 
                 <Text style={{ fontSize: 20, marginHorizontal: 20, marginTop: 20 }}>{mood.rationalResponse}</Text>
 
-                <Text style={styles.subheading}>
+                <Text style={commonStyles.subheading}>
                     {i18n.t('mood.emotionsAfter')}
                 </Text>
 
@@ -77,6 +79,8 @@ const styles = StyleSheet.create({
     },
     formWrapper: {
         width: Dimensions.get('window').width - 20,
+        // backgroundColor: 'red',
+        paddingLeft: 20,
     },
     heading: {
         fontSize: 35,

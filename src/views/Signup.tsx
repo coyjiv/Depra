@@ -46,9 +46,9 @@ const Signup = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 30 }}>
-                <Text category="h1" style={{ fontWeight: '900', fontSize: 45 }}>Depra</Text>
+                <Text category="h1" style={{ fontSize: 45 }}>Depra</Text>
 
-                <Text category="h2" style={{ fontWeight: '300' }} >{i18n.t('signup.title')}</Text>
+                <Text category="h2" >{i18n.t('signup.title')}</Text>
                 <Layout style={{ marginTop: 50 }}>
                     <Input
                         label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10 }}>{i18n.t('signup.email')}</Text>}

@@ -47,7 +47,7 @@ const Login = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 30 }}>
-                <Text category="h1" style={{ fontWeight: '900', fontSize: 45 }}>Depra</Text>
+                <Text category="h1" style={{ fontSize: 45 }}>Depra</Text>
 
                 <Text category="h2" style={{ fontWeight: '300' }} >{i18n.t('login.title')}</Text>
                 <Layout style={{ marginTop: 50 }}>

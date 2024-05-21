@@ -156,7 +156,7 @@ const MoodForm = ({ type = 'create', mood: moodDoc, submitCallback }: { type?: '
 
                 </ScrollView>
                 <Button disabled={Object.values(formik.errors).length > 0} style={{ marginVertical: 50 }} onPress={formik.handleSubmit as any}>
-                    {() => <Text style={{ fontFamily: 'PatrickHand_400Regular', color: 'white', fontSize: 20 }}>{type === 'create' ? i18n.t('mood.addEntry') : i18n.t('mood.editEntry')}</Text>}
+                    {() => <Text style={{ fontFamily: 'PTSans_400Regular', color: 'white', fontSize: 20 }}>{type === 'create' ? i18n.t('mood.addEntry') : i18n.t('mood.editEntry')}</Text>}
                 </Button>
                 {/* <KeyboardSpacer topSpacing={Dimensions.get('screen').height * 0.1} /> */}
             </KeyboardAvoidingView>

@@ -1,13 +1,14 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { getMoodsForDate, getRealTimeMoods } from "../../api/MoodApi";
-import { CircularProgressBar, Layout, Text } from "@ui-kitten/components";
+import { Layout, Spinner, Text } from "@ui-kitten/components";
 import MoodWrapper from "./MoodWrapper";
 import FloatingButton from "../FloatingButton";
 import { Dimensions, StyleSheet } from "react-native";
 import { MoodCreationModal } from "./MoodCreationModal";
 import { i18n } from "../../i18n";
 import { ScrollView } from "react-native-gesture-handler";
+import 'moment/locale/uk';
 
 export const Page = ({ index }: { index: number }) => {
     const [ creationModalVisible, setCreationModalVisible ] = useState(false);
@@ -27,7 +28,20 @@ export const Page = ({ index }: { index: number }) => {
 
     const pageDate = moment().add(index, 'days');
     const displayDate = pageDate.format('DD.MM.YYYY');
-    const weekday = pageDate.locale(i18n.locale.includes('en') ? 'en' : i18n.locale.includes('ru') ? 'ru' : 'uk').format('dddd').charAt(0).toUpperCase() + pageDate.format('dddd').slice(1);
+    // Set the locale once and use it for all operations
+    const locale = i18n.locale.includes('en') ? 'en' : i18n.locale.includes('ru') ? 'ru' : 'uk';
+
+    // Apply the locale setting
+    pageDate.locale(locale);
+
+    // Format the weekday, ensuring the locale applies
+    const formattedDay = pageDate.format('dddd'); // Full day name according to set locale
+
+    // Capitalize the first letter and combine with the rest of the day name
+    const weekday = formattedDay.charAt(0).toUpperCase() + formattedDay.slice(1);
+
+    console.log(weekday); // Check the output
+
     const isToday = moment().isSame(pageDate, 'day');
 
     useEffect(() => {
@@ -62,7 +76,7 @@ export const Page = ({ index }: { index: number }) => {
             }
         >
             <Text style={styles.tabText}>{isToday ? `${i18n.t('mood.today')}, ${displayDate}` : `${weekday}, ${displayDate}`}</Text>
-            <ScrollView contentContainerStyle={{ padding: 0, margin: 0, alignItems: 'center', paddingBottom: 100 }} style={{ minHeight: Dimensions.get('screen').height - 250 }}>{isLoading ? <CircularProgressBar /> : <MoodWrapper moods={moods} />}</ScrollView>
+            <ScrollView contentContainerStyle={{ padding: 0, paddingTop: isLoading ? 50 : 0, margin: 0, alignItems: 'center', paddingBottom: 100 }} style={{ minHeight: Dimensions.get('screen').height - 250 }}>{isLoading ? <Spinner /> : <MoodWrapper isToday={isToday} moods={moods} />}</ScrollView>
             {isToday && <FloatingButton onPress={handleCreationModalOpen} />}
             {isToday && <MoodCreationModal onClose={handleCreationModalClose} visible={creationModalVisible} />}
         </Layout>

@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, Alert, StyleSheet } from 'react-native';
-import { Icon } from '@ui-kitten/components';
+import { View, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import { Icon, Text } from '@ui-kitten/components';
 import { Menu, MenuItem } from 'react-native-material-menu';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebaseConfig';
@@ -10,7 +10,7 @@ const MenuIcon = (props) => (
     <Icon {...props} name='more-vertical' />
 );
 
-export const TopNavigationBar = ({ title, subtitle }) => {
+export const TopNavigationBar = ({ title, subtitle }: { title?: string, subtitle?: string }) => {
     const [ menuVisible, setMenuVisible ] = useState(false);
     const menuRef = useRef(null);
     const navigation = useNavigation();
@@ -29,7 +29,7 @@ export const TopNavigationBar = ({ title, subtitle }) => {
     };
 
     const navigateToSettings = () => {
-        navigation.navigate('Settings');
+        navigation.navigate('Settings' as never);
         toggleMenu();
     };
 
@@ -46,8 +46,8 @@ export const TopNavigationBar = ({ title, subtitle }) => {
                 }
                 onRequestClose={toggleMenu}
             >
-                <MenuItem onPress={handleLogout}>Logout</MenuItem>
-                <MenuItem onPress={navigateToSettings}>Settings</MenuItem>
+                <MenuItem onPress={navigateToSettings}><Text>Settings</Text></MenuItem>
+                <MenuItem onPress={handleLogout}><Text>Logout</Text></MenuItem>
             </Menu>
         </View>
     );
