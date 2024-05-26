@@ -12,13 +12,11 @@ import { useTranslation } from "react-i18next";
 
 export const Page = ({ index }: { index: number }) => {
     const [ refreshing, setRefreshing ] = useState(false);
+    const [ counter, setCounter ] = useState(0);
 
     const onRefresh = useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    }, []);
+        setCounter(counter + 1);
+    }, [ counter ]);
     const { t, i18n } = useTranslation()
 
     const [ creationModalVisible, setCreationModalVisible ] = useState(false);
@@ -59,7 +57,7 @@ export const Page = ({ index }: { index: number }) => {
         const unsubscribe = getRealTimeMoods(pageDate, setMoods, setIsLoading);
 
         return () => unsubscribe();
-    }, [ index ]);
+    }, [ index, counter ]);
 
 
     // useEffect(() => {

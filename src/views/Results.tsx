@@ -1,14 +1,16 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Divider, Layout, Text } from '@ui-kitten/components';
 import { ScrollView } from 'react-native-gesture-handler';
 import DepressionInfoAccordion from '../components/DepressionInfoAccordion';
 import { useTranslation } from 'react-i18next';
 import { TopNavigationBar } from '../components/TopNavigationBar';
-import { View } from 'react-native';
+import { View, BackHandler } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export const Results = ({ route }) => {
     const { t, i18n } = useTranslation();
+    const navigation = useNavigation()
 
     const { score } = route.params
     const depressionLevel = useMemo(() => {
@@ -28,6 +30,22 @@ export const Results = ({ route }) => {
     console.log(score, depressionLevel, depressionLevelDescription);
 
     const [ isCollapsed, setIsCollapsed ] = useState(true);
+
+    useEffect(() => {
+        const backAction = () => {
+            // Define the specific navigation action
+            navigation.navigate('Test', {
+                resetState: true
+            });
+            return true;
+        };
+
+        BackHandler.addEventListener('hardwareBackPress', backAction);
+
+        return () => {
+            BackHandler.removeEventListener('hardwareBackPress', backAction);
+        };
+    }, []);
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <TopNavigationBar />

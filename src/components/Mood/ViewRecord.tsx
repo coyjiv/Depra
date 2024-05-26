@@ -67,7 +67,7 @@ const ViewCard = ({ mood, toggleEditing }: { mood: MoodData, toggleEditing: Reac
                 </Layout>
 
             </ScrollView>
-            <Button style={styles.editButton} onPress={() => toggleEditing(true)}>Edit</Button>
+            <Button style={styles.editButton} onPress={() => toggleEditing(true)}>{t('misc.edit')}</Button>
         </Card>
     )
 }

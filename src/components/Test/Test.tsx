@@ -10,8 +10,10 @@ import Button from "../Button";
 import { TopNavigationBar } from "../TopNavigationBar";
 import { useTranslation } from "react-i18next";
 import { createTestRecord, isUserCanTakeTest } from "../../api/TestApi";
+import * as yup from 'yup';
 
-export const Test = ({ navigation }) => {
+
+export const Test = ({ navigation, route }) => {
     const { t, i18n } = useTranslation();
     const [ canTakeTest, setCanTakeTest ] = useState({ isUserCanTakeTest: false, nextTestDate: '' });
 
@@ -27,11 +29,29 @@ export const Test = ({ navigation }) => {
 
     const [ step, setStep ] = useState(0)
 
+    const { resetState = false } = route?.params || { params: { resetState: false } }
+
+    useEffect(() => {
+        if (!canTakeTest.isUserCanTakeTest && resetState && step !== 0) {
+            setStep(0)
+        }
+
+    }, [ resetState, step, canTakeTest ])
+
 
     const initialValues = questions.reduce((values, _, index) => ({
         ...values,
         [ `question${index + 1}` ]: -1
     }), {});
+
+    const validationSchema = yup.object().shape(
+        Object.keys(initialValues).reduce((schema, key) => {
+            schema[ key ] = yup.number().notOneOf([ -1 ], 'This field is required').required('This field is required');
+            return schema;
+        }, {})
+    );
+
+
 
     useEffect(() => {
         isUserCanTakeTest().then(setCanTakeTest)
@@ -49,13 +69,14 @@ export const Test = ({ navigation }) => {
                 {step === 0 && !canTakeTest.isUserCanTakeTest && <Text style={{ paddingHorizontal: 20, marginTop: 40, fontSize: 20, textAlign: 'center' }}>{(t('test.blockerInfo', { returnObjects: true }) as (string) => string)(canTakeTest.nextTestDate)}</Text>}
 
                 {step === 0 && <Layout style={{ flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'center', marginTop: 30, gap: 20 }}>
-                    <Button textProps={{ category: 's1' }} disabled={canTakeTest.isUserCanTakeTest} onPress={() => setStep(1)}>{t('test.takeTest')}</Button>
+                    <Button textProps={{ category: 's1' }} disabled={!canTakeTest.isUserCanTakeTest} onPress={() => setStep(1)}>{t('test.takeTest')}</Button>
                     <Button textProps={{ category: 's1' }} onPressIn={() => navigation.navigate('Progress')}>{t('test.showProgress')}</Button>
                 </Layout>}
 
-                {step === 1 && <ScrollView style={styles.container}>
+                {step === 1 && <ScrollView overScrollMode="never" endFillColor={'black'} style={styles.container}>
                     <Formik
                         initialValues={initialValues}
+                        validationSchema={validationSchema}
                         onSubmit={values => {
                             const levelKey = Object.keys(t('test.depressionLevels')).reduce((prev, curr) => Number(curr) <= score ? curr : prev);
                             const descriptionKey = Object.keys(t('test.depressionLevelDescriptions')).reduce((prev, curr) => Number(curr) <= score ? curr : prev);
@@ -70,7 +91,7 @@ export const Test = ({ navigation }) => {
                             navigation.navigate('Results', { score });
                         }}
                     >
-                        {({ setFieldValue, handleSubmit, values }) => (
+                        {({ setFieldValue, handleSubmit, values, errors, isValid }) => (
                             <Layout style={styles.formContainer}>
                                 {questions.map((question, index) => (
                                     <QuestionItem
@@ -81,7 +102,8 @@ export const Test = ({ navigation }) => {
                                         setValue={setFieldValue}
                                     />
                                 ))}
-                                <Button textProps={{ category: 's1' }} style={styles.button} onPress={handleSubmit as never}>{t('test.toResults')}</Button>
+                                {errors && Object.values(errors).length > 0 && <Text style={{ color: 'red', textAlign: 'center' }}>{t('test.allQuestionAreRequired')}</Text>}
+                                <Button disabled={!isValid} textProps={{ category: 's1' }} style={styles.button} onPress={handleSubmit as never}>{t('test.toResults')}</Button>
                             </Layout>
                         )}
                     </Formik>

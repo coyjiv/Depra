@@ -41,15 +41,19 @@ const Mood = ({ mood: moodDoc }: { mood: MoodDoc }) => {
                 <Text category='h1' numberOfLines={1} style={{ fontWeight: '600', fontSize: 18, marginBottom: 10 }}>{t('mood.rationalResponse')}: {mood.rationalResponse}</Text>
                 <Layout style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
                     <Text>{t('mood.before')}: </Text>
-                    {mood.emotionsBefore.map((emotion, index, array) => (
-                        <Text key={index}>{emotion} {index !== array.length - 1 && "|"} </Text>
-                    ))}
+                    <Text numberOfLines={1} style={{ marginRight: 50 }}>
+                        {mood.emotionsBefore.map((emotion, index, array) => (
+                            <Text key={index}>{emotion} {index !== array.length - 1 && "|"} </Text>
+                        ))}
+                    </Text>
                 </Layout>
                 <Layout style={{ flexDirection: 'row', backgroundColor: 'transparent' }}>
                     <Text>{t('mood.after')}: </Text>
-                    {mood.emotionsAfter.map((emotion, index, array) => (
-                        <Text key={index}>{emotion} {index !== array.length - 1 && "|"} </Text>
-                    ))}
+                    <Text numberOfLines={1} style={{ marginRight: 50 }}>
+                        {mood.emotionsAfter.map((emotion, index, array) => (
+                            <Text key={index}>{emotion} {index !== array.length - 1 && "|"} </Text>
+                        ))}
+                    </Text>
                 </Layout>
                 <Text style={{ position: 'absolute', bottom: 10, right: 10 }}>{date}</Text>
             </Layout>

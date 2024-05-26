@@ -23,7 +23,8 @@ const Stats = () => {
             const data = await recalculateStatistics();
             console.log('stats', data);
 
-            setResult(data);
+            // setResult(data);
+            setCounter(counter + 1);
         } catch (error) {
             console.error("Error recalculating statistics:", error);
         } finally {
@@ -55,7 +56,25 @@ const Stats = () => {
                 <Text category='h1'>{t('progress.title')}</Text>
                 <Text style={{ marginTop: 10 }} category='s1'>{t('progress.description')}</Text>
                 <Button style={{ marginVertical: 20 }} onPressIn={calculateProgress} disabled={loading}>{t('progress.calculateProgress')}</Button>
-                {loading ? <Spinner /> : result.length > 0 ? <PeriodicChart result={result} /> : <Text>{t('progress.lackOfData')}</Text>}
+                {loading ? <Spinner /> : result?.length > 0 ? <>
+                    <PeriodicChart result={result} />
+                    <Text category='h1' style={{ fontSize: 20, marginVertical: 20 }}>{t('progress.totalTestsTaken')}</Text>
+                    <Text category='s1'>{result[ 0 ].testProgress.totalTests}</Text>
+                    <Text category='h1' style={{ fontSize: 20, marginVertical: 20 }}>{t('progress.totalMoodEntries')}</Text>
+                    <Text category='s1'>{result[ 0 ].diaryStats.allTime.totalDiaryEntries}</Text>
+                    <Text category="h1" style={{ fontSize: 20, marginVertical: 20 }}>{t('progress.emotions')}</Text>
+                    <Text category="s1" style={{ fontSize: 18, marginVertical: 10 }}>{t('progress.mostCommonEmotions')}</Text>
+
+                    {result[ 0 ].diaryStats.allTime.mostCommonEmotions.filter(e => e.count > 1).map((emotion, index) => (
+                        <Text key={index} category='s1'>{emotion.emotion} : {emotion.count}</Text>
+                    ))}
+
+                    <Text category="s1" style={{ fontSize: 18, marginVertical: 10 }}>{t('progress.emotionCount')}</Text>
+
+                    {Object.entries(result[ 0 ].diaryStats.allTime.emotionCounts).map((emotion, index) => (
+                        <Text key={index} category='s1'>{(emotion as [ string, number ])[ 0 ]} : {(emotion as [ string, number ])[ 1 ]}</Text>
+                    ))}
+                </> : <Text>{t('progress.lackOfData')}</Text>}
                 {/* <BasicChart /> */}
 
 

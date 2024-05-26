@@ -27,6 +27,7 @@ type AutocompleteProps = {
 export const Autocomplete = ({ options: data, placeholder, selected = [], onSelect, onRemove, inputValue, onInputValueChange, onBadgeUpdate, withBadges = true, withBadgePercentage = false, onPressIn }): React.ReactElement<AutocompleteProps> => {
     const [ panelVisible, setPanelVisible ] = React.useState(false);
     const [ options, setOptions ] = React.useState(data);
+    const [ scroll, setScroll ] = React.useState(0);
 
     const inputRef = useRef(null);
 
@@ -53,10 +54,17 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
     // console.log('selected ', selected);
 
     useEffect(() => {
-        if (panelVisible) {
+        if (panelVisible && scroll < 2) {
             onPressIn && onPressIn()
+            setScroll(scroll + 1)
         }
-    }, [ panelVisible, onPressIn ])
+    }, [ panelVisible, onPressIn, scroll ])
+
+    useEffect(() => {
+        if (!panelVisible) {
+            setScroll(0)
+        }
+    }, [ panelVisible ])
 
 
 

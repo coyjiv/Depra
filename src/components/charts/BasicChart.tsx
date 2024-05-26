@@ -56,10 +56,11 @@ export const BasicChart = ({ data = [], xKey, yKeys }: BasicChartProps) => {
                 data={formattedData}
                 xKey="displayDate"
                 yKeys={[ "score" ]}
-                domainPadding={{ left: 15, right: 0, top: 90 }}
+                domainPadding={{ left: 15, right: 15, top: 90 }}
                 axisOptions={{
                     font,
                     labelColor: '#666',
+                    formatXLabel: (value) => value ?? '',
                     labelOffset: { x: 12, y: 15 },
                     labelPosition: { x: "outset", y: "outset" },
                     axisSide: { x: "bottom", y: "left" },

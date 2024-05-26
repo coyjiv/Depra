@@ -73,6 +73,7 @@ export const en = {
             distortionsList: [ "All-or-Nothing Thinking", "Overgeneralization", "Mental Filters", "Discounting the Positive", "Jumping to Conclusions", "Magnification", "Emotional Reasoning", "\"Should\" Statements", "Labeling", "Personalization and Blame" ]
         },
         test: {
+            allQuestionAreRequired: "All questions are required",
             suicidalNote: "Crucial information",
             testOptions: [ 'Not at all', 'A little', 'Moderately', 'Very', 'Extremely' ],
             copy: `In order to track the progress of curing depression, smart man David Burns came up with a simple 25-question test that can determine your level of depression pretty accurately.
@@ -157,6 +158,7 @@ It's a good idea to take it once a week to see whether your treatment options ar
             languageChangeDescription: 'Are you sure you want to change the application language to ',
             confirm: 'Confirm',
             cancel: 'Cancel',
+            edit: 'Edit'
         },
         progress: {
             title: 'Your progress',
@@ -167,6 +169,11 @@ It's a good idea to take it once a week to see whether your treatment options ar
             progressChartDescription: 'Here you can see your progress with depression. The chart shows your progress over time. The lower score - the better you feel.',
             progressChartNoData: 'No data to show',
             progressChartNoDataDescription: 'You have not taken the test yet, or you have not added any mood records. Start by taking the test or adding a new mood record.',
+            totalTestsTaken: 'Total tests taken: ',
+            totalMoodEntries: 'Total mood entries: ',
+            emotions: 'Emotions',
+            mostCommonEmotions: 'Most common emotions',
+            emotionCount: 'Overall count',
             timeslots: {
                 allTime: 'All time',
                 yearly: 'Yearly',

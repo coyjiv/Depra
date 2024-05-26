@@ -55,10 +55,12 @@ export const getMoodsForDate = async (date = moment()): Promise<MoodDoc[]> => {
 };
 
 export const getRealTimeMoods = (date, setMoods, setIsLoading) => {
+
+  const userId = getUserUid();
   const diaryRef = collection(db, 'mood-diary');
   const startOfDay = Timestamp.fromDate(date.startOf('day').toDate());
   const endOfDay = Timestamp.fromDate(date.endOf('day').toDate());
-  const moodQuery = query(diaryRef, where("createdDate", ">=", startOfDay), where("createdDate", "<=", endOfDay), orderBy("createdDate", "desc"));
+  const moodQuery = query(diaryRef, where("userId", "==", userId), where("createdDate", ">=", startOfDay), where("createdDate", "<=", endOfDay), orderBy("createdDate", "desc"));
 
   return onSnapshot(moodQuery, (snapshot) => {
     const moods = snapshot.docs.map(doc => ({
