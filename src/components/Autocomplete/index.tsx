@@ -1,6 +1,5 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { Input, Layout, Card, AutocompleteItem, Text } from '@ui-kitten/components';
-import { i18n } from '../../i18n';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Badge from '../Badge';
@@ -20,11 +19,12 @@ type AutocompleteProps = {
     inputValue: string;
     onInputValueChange: (value: string) => void;
     onBadgeUpdate?: (item: { title: string, emotionPercentage?: number }) => void;
+    onPressIn?: () => void;
     withBadges?: boolean;
     withBadgePercentage?: boolean;
 }
 
-export const Autocomplete = ({ options: data, placeholder, selected = [], onSelect, onRemove, inputValue, onInputValueChange, onBadgeUpdate, withBadges = true, withBadgePercentage = false }): React.ReactElement<AutocompleteProps> => {
+export const Autocomplete = ({ options: data, placeholder, selected = [], onSelect, onRemove, inputValue, onInputValueChange, onBadgeUpdate, withBadges = true, withBadgePercentage = false, onPressIn }): React.ReactElement<AutocompleteProps> => {
     const [ panelVisible, setPanelVisible ] = React.useState(false);
     const [ options, setOptions ] = React.useState(data);
 
@@ -34,6 +34,7 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
         setPanelVisible(false);
         onInputValueChange('');
         onSelect({ ...item, emotionPercentage: 0 });
+        Keyboard.dismiss();
     }, [ selected ]);
 
     const onChangeText = (query): void => {
@@ -51,6 +52,11 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
 
     // console.log('selected ', selected);
 
+    useEffect(() => {
+        if (panelVisible) {
+            onPressIn && onPressIn()
+        }
+    }, [ panelVisible, onPressIn ])
 
 
 
@@ -71,6 +77,7 @@ export const Autocomplete = ({ options: data, placeholder, selected = [], onSele
                 placeholder={placeholder}
                 value={inputValue}
                 onChangeText={onChangeText}
+            // onPressIn={() => onPressIn && onPressIn()}
             // onPressOut={() => setPanelVisible(false)}
             // ref={inputRef}
             />

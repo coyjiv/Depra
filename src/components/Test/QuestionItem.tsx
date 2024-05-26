@@ -1,6 +1,6 @@
 import { Layout, Radio, RadioGroup, Text } from "@ui-kitten/components";
 import { memo, useCallback } from "react";
-import { i18n } from "../../i18n";
+import { useTranslation } from "react-i18next";
 import { StyleSheet } from "react-native";
 
 interface QuestionItemProps {
@@ -11,6 +11,7 @@ interface QuestionItemProps {
 }
 
 export const QuestionItem = memo(({ question, index, value, setValue }: QuestionItemProps) => {
+    const { t, i18n } = useTranslation()
     const handleRadioChange = useCallback((nextValue) => {
         setValue(`question${index + 1}`, nextValue);
     }, [ setValue, index ]);
@@ -19,7 +20,7 @@ export const QuestionItem = memo(({ question, index, value, setValue }: Question
         <Layout style={styles.questionContainer}>
             <Text style={styles.questionText}>{index + 1 + ". "} {question}</Text>
             <RadioGroup selectedIndex={value} onChange={handleRadioChange}>
-                {(i18n.t('test.testOptions') as string[]).map((option, idx) => (
+                {(t('test.testOptions', { returnObjects: true }) as string[]).map((option, idx) => (
                     <Radio key={idx}>{option}</Radio>
                 ))}
             </RadioGroup>

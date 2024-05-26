@@ -1,4 +1,4 @@
-import { Timestamp, collection, getDocs, query, where, setDoc, doc, addDoc, QuerySnapshot, QueryDocumentSnapshot, FirestoreDataConverter, DocumentData, SnapshotOptions, getDoc, onSnapshot } from "firebase/firestore";
+import { Timestamp, collection, getDocs, query, where, setDoc, doc, addDoc, QuerySnapshot, QueryDocumentSnapshot, FirestoreDataConverter, DocumentData, SnapshotOptions, getDoc, onSnapshot, orderBy } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { getUserUid } from "./BaseApi";
 import moment from "moment";
@@ -58,7 +58,7 @@ export const getRealTimeMoods = (date, setMoods, setIsLoading) => {
   const diaryRef = collection(db, 'mood-diary');
   const startOfDay = Timestamp.fromDate(date.startOf('day').toDate());
   const endOfDay = Timestamp.fromDate(date.endOf('day').toDate());
-  const moodQuery = query(diaryRef, where("createdDate", ">=", startOfDay), where("createdDate", "<=", endOfDay));
+  const moodQuery = query(diaryRef, where("createdDate", ">=", startOfDay), where("createdDate", "<=", endOfDay), orderBy("createdDate", "desc"));
 
   return onSnapshot(moodQuery, (snapshot) => {
     const moods = snapshot.docs.map(doc => ({

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { i18n } from '../../i18n';
 import { Autocomplete } from '../Autocomplete';
+import { useTranslation } from 'react-i18next';
 
 export const DistortionPicker = ({ placeholder, selected, onSelect, onRemove }): React.ReactElement => {
-    const distortions = (i18n.t('mood.distortionsList') as string[]).map(el => ({ title: el }));
+    const { t, i18n } = useTranslation()
+    const distortions = (t('mood.distortionsList') as string[]).map(el => ({ title: el }));
 
     const [ distortionText, setDistortionText ] = useState('');
     const handleOnChange = (value) => {

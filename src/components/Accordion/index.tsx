@@ -1,4 +1,4 @@
-import { Text } from "@ui-kitten/components";
+import { Text, useTheme } from "@ui-kitten/components";
 import { useState } from "react";
 import { View } from "react-native";
 import Collapsible from "react-native-collapsible";
@@ -7,13 +7,15 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 export const Accordion = ({ title, content }) => {
     const [ collapsed, setCollapsed ] = useState(true);
 
+    const theme = useTheme();
+
     const toggleExpanded = () => {
         setCollapsed(!collapsed);
     };
 
     return (
         <View style={{ marginTop: 20 }}>
-            <TouchableOpacity style={{ padding: 10, backgroundColor: 'pink', borderRadius: 20 }} onPress={toggleExpanded}>
+            <TouchableOpacity style={{ padding: 10, backgroundColor: theme[ 'color-primary-200' ], borderRadius: 20 }} onPress={toggleExpanded}>
                 <View>
                     <Text style={{ fontSize: 20 }}>{title}</Text>
                 </View>

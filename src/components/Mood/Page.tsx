@@ -1,16 +1,26 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getMoodsForDate, getRealTimeMoods } from "../../api/MoodApi";
 import { Layout, Spinner, Text } from "@ui-kitten/components";
 import MoodWrapper from "./MoodWrapper";
 import FloatingButton from "../FloatingButton";
 import { Dimensions, StyleSheet } from "react-native";
 import { MoodCreationModal } from "./MoodCreationModal";
-import { i18n } from "../../i18n";
-import { ScrollView } from "react-native-gesture-handler";
+import { RefreshControl, ScrollView } from "react-native-gesture-handler";
 import 'moment/locale/uk';
+import { useTranslation } from "react-i18next";
 
 export const Page = ({ index }: { index: number }) => {
+    const [ refreshing, setRefreshing ] = useState(false);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 2000);
+    }, []);
+    const { t, i18n } = useTranslation()
+
     const [ creationModalVisible, setCreationModalVisible ] = useState(false);
     const [ moods, setMoods ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -22,14 +32,14 @@ export const Page = ({ index }: { index: number }) => {
         setCreationModalVisible(false);
     }
 
-    console.log(i18n.locale);
+    console.log(i18n.language);
 
 
 
     const pageDate = moment().add(index, 'days');
     const displayDate = pageDate.format('DD.MM.YYYY');
     // Set the locale once and use it for all operations
-    const locale = i18n.locale.includes('en') ? 'en' : i18n.locale.includes('ru') ? 'ru' : 'uk';
+    const locale = i18n.language.includes('en') ? 'en' : i18n.language.includes('ru') ? 'ru' : 'uk';
 
     // Apply the locale setting
     pageDate.locale(locale);
@@ -75,8 +85,8 @@ export const Page = ({ index }: { index: number }) => {
                 styles.tab
             }
         >
-            <Text style={styles.tabText}>{isToday ? `${i18n.t('mood.today')}, ${displayDate}` : `${weekday}, ${displayDate}`}</Text>
-            <ScrollView contentContainerStyle={{ padding: 0, paddingTop: isLoading ? 50 : 0, margin: 0, alignItems: 'center', paddingBottom: 100 }} style={{ minHeight: Dimensions.get('screen').height - 250 }}>{isLoading ? <Spinner /> : <MoodWrapper isToday={isToday} moods={moods} />}</ScrollView>
+            <Text style={styles.tabText}>{isToday ? `${t('mood.today')}, ${displayDate}` : `${weekday}, ${displayDate}`}</Text>
+            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} contentContainerStyle={{ padding: 0, paddingTop: isLoading ? 50 : 0, margin: 0, alignItems: 'center', paddingBottom: 100 }} style={{ minHeight: Dimensions.get('screen').height - 250 }}>{isLoading ? <Spinner /> : <MoodWrapper isToday={isToday} moods={moods} />}</ScrollView>
             {isToday && <FloatingButton onPress={handleCreationModalOpen} />}
             {isToday && <MoodCreationModal onClose={handleCreationModalClose} visible={creationModalVisible} />}
         </Layout>

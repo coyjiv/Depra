@@ -7,14 +7,14 @@ import 'moment/locale/ru';
 import InfinitePager from 'react-native-infinite-pager'
 import { Page } from "../components/Mood/Page";
 import { TopNavigationBar } from "../components/TopNavigationBar";
-import { i18n } from "../i18n";
+// import { i18n } from "../i18n";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MoodCreationModal } from "../components/Mood/MoodCreationModal";
 import MoodForm from "../components/Mood/MoodForm";
 import ViewRecord from "../components/Mood/ViewRecord";
 import { MoodData, MoodDoc } from "../../types";
 import { commonStyles } from "../styles/common";
-import { LocaleContext } from "../context/LocaleContext";
+import { useTranslation } from "react-i18next";
 
 
 type RootStackParamList = {
@@ -24,11 +24,12 @@ type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const MoodScreen = () => {
+    const { t, i18n } = useTranslation();
 
     return (
         <Stack.Navigator>
             <Stack.Screen options={{ headerShown: false }} name="Home" component={MoodScreenHome} />
-            <Stack.Screen name="ViewRecord" options={{ headerTitle: () => (<Text>{i18n.t('mood.viewRecord')}</Text>) }} component={ViewRecord} />
+            <Stack.Screen name="ViewRecord" options={{ headerTitle: () => (<Text>{t('mood.viewRecord')}</Text>) }} component={ViewRecord} />
         </Stack.Navigator>
     )
 
@@ -48,7 +49,8 @@ export default MoodScreen
 
 
 export const MoodScreenHome = () => {
-    const { locale } = useContext(LocaleContext);
+    const { t, i18n } = useTranslation();
+
     const [ selectedDate, setSelectedDate ] = useState(moment());
 
     const handleSelect = (index) => {
@@ -59,7 +61,7 @@ export const MoodScreenHome = () => {
             <Divider />
             <TopNavigationBar />
             <Layout style={{ padding: 0 }}>
-                <Text category="h1" style={commonStyles.heading}>{i18n.t('tabs.moodDiary')}</Text>
+                <Text category="h1" style={commonStyles.heading}>{t('tabs.moodDiary')}</Text>
                 <InfinitePager
                     PageComponent={Page}
                     maxIndex={0}

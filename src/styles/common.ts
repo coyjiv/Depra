@@ -1,7 +1,10 @@
 import { StyleSheet } from "react-native";
 
 export const commonStyles = StyleSheet.create({
-    container: {},
+    container: {
+        paddingHorizontal: 20,
+        height: '100%',
+    },
     formWrapper: {},
     heading: {
         fontSize: 35,

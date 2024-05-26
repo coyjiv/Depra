@@ -5,12 +5,14 @@ import { Menu, MenuItem } from 'react-native-material-menu';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebaseConfig';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const MenuIcon = (props) => (
     <Icon {...props} name='more-vertical' />
 );
 
 export const TopNavigationBar = ({ title, subtitle }: { title?: string, subtitle?: string }) => {
+    const { t } = useTranslation();
     const [ menuVisible, setMenuVisible ] = useState(false);
     const menuRef = useRef(null);
     const navigation = useNavigation();
@@ -46,8 +48,8 @@ export const TopNavigationBar = ({ title, subtitle }: { title?: string, subtitle
                 }
                 onRequestClose={toggleMenu}
             >
-                <MenuItem onPress={navigateToSettings}><Text>Settings</Text></MenuItem>
-                <MenuItem onPress={handleLogout}><Text>Logout</Text></MenuItem>
+                <MenuItem onPress={navigateToSettings}><Text>{t('settings.title')}</Text></MenuItem>
+                <MenuItem onPress={handleLogout}><Text>{t('misc.logout')}</Text></MenuItem>
             </Menu>
         </View>
     );

@@ -6,11 +6,12 @@ import { Week } from '../components/Week';
 import { Agenda, Calendar } from 'react-native-calendars';
 import { SafeAreaView } from "react-native-safe-area-context"
 import { TopNavigationBar } from '../components/TopNavigationBar';
+import { useTranslation } from 'react-i18next';
 
 
 
 export const ScheduleScreen = ({ navigation }: any) => {
-
+    const { t, i18n } = useTranslation();
 
     const navigateBack = () => {
         navigation.goBack();

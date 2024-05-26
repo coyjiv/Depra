@@ -1,6 +1,5 @@
 import { Button, Card, Input, Text } from '@ui-kitten/components'
-import React from 'react'
-import { i18n } from '../../i18n'
+import React, { useState } from 'react'
 import { Dimensions, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import { EmotionAutocomplete } from './EmotionAutocomplete'
@@ -10,16 +9,36 @@ import { createMood, editMood } from '../../api/MoodApi'
 import * as Yup from 'yup'
 import { MoodData, MoodDoc } from '../../../types'
 import { commonStyles } from '../../styles/common'
+import { useTranslation } from 'react-i18next'
 
-const validationSchema = Yup.object().shape({
-    automaticThoughts: Yup.string().required(i18n.t('mood.required')),
-    cognitiveDistortions: Yup.array().min(1, i18n.t('mood.required')),
-    rationalResponse: Yup.string().required(i18n.t('mood.required')),
-    emotionsAfter: Yup.array().min(1, i18n.t('mood.required')),
-    emotionsBefore: Yup.array().min(1, i18n.t('mood.required'))
-})
+const useMoodFormValidationSchema = () => {
+    const { t } = useTranslation()
+    return Yup.object().shape({
+        emotionsBefore: Yup.array().min(1, t('mood.required')),
+        automaticThoughts: Yup.string().required(t('mood.required')),
+        cognitiveDistortions: Yup.array().min(1, t('mood.required')),
+        rationalResponse: Yup.string().required(t('mood.required')),
+        emotionsAfter: Yup.array().min(1, t('mood.required')),
+    })
+}
+
+// const validationSchema = Yup.object().shape({
+//     automaticThoughts: Yup.string().required(t('mood.required')),
+//     cognitiveDistortions: Yup.array().min(1, t('mood.required')),
+//     rationalResponse: Yup.string().required(t('mood.required')),
+//     emotionsAfter: Yup.array().min(1, t('mood.required')),
+//     emotionsBefore: Yup.array().min(1, t('mood.required'))
+// })
 
 const MoodForm = ({ type = 'create', mood: moodDoc, submitCallback }: { type?: 'edit' | 'create', mood?: MoodDoc, submitCallback?: () => void }) => {
+    const { t } = useTranslation()
+
+    const scrollRef = React.useRef(null)
+
+    const [ currentScrollPosition, setCurrentScrollPosition ] = useState(0);
+
+
+    const validationSchema = useMoodFormValidationSchema()
     const mood = moodDoc?.data
     const editValues = {
         emotionsBefore: mood?.emotionsBefore.map((e) => ({ title: e.split(' ')[ 0 ], emotionPercentage: parseFloat(e.split(' ')[ 1 ]) / 100 })),
@@ -113,50 +132,70 @@ const MoodForm = ({ type = 'create', mood: moodDoc, submitCallback }: { type?: '
     const handleDistortionSelect = (distortion) => {
         formik.setFieldValue('cognitiveDistortions', [ ...formik.values.cognitiveDistortions, distortion ])
     }
+
+
+    const handleScroll = (event) => {
+        const { y } = event.nativeEvent.contentOffset;
+        setCurrentScrollPosition(y);
+    };
+
+    const handleScrollDownForAutocomplete = () => {
+        if (scrollRef.current) {
+            console.log('scrolling down');
+
+            // Scroll down by 50 more pixels from the current scroll position
+            const newScrollPosition = currentScrollPosition + 50;
+            scrollRef.current.scrollTo({
+                y: newScrollPosition,
+                animated: true
+            });
+        }
+    };
+
     return (
         <Card disabled={true} style={styles.card}>
             {type === 'create' && <Text category='h1' style={commonStyles.heading}>
-                {i18n.t('mood.newEntry')}
+                {t('mood.newEntry')}
             </Text>}
             <KeyboardAvoidingView
                 behavior={"padding"}
             >
 
-                <ScrollView keyboardShouldPersistTaps={'handled'} style={type !== 'create' ? { ...styles.formWrapper, height: Dimensions.get('window').height * 0.6 } : styles.formWrapper}>
+                <ScrollView ref={scrollRef} onScroll={handleScroll} scrollEventThrottle={16} keyboardShouldPersistTaps={'handled'} style={type !== 'create' ? { ...styles.formWrapper, height: Dimensions.get('window').height * 0.6 } : styles.formWrapper}>
                     <Text style={commonStyles.subheading}>
-                        {i18n.t('mood.emotionsBefore')}
+                        {t('mood.emotionsBefore')}
                     </Text>
 
-                    <EmotionAutocomplete onEmotionUpdate={handleUpdateEmotionsBefore} placeholder={i18n.t('mood.emotionsBefore')} selected={formik.values.emotionsBefore} onSelect={handleEmotionsBeforeSelect} onRemove={handleEmotionBeforeRemove} />
+                    <EmotionAutocomplete onEmotionUpdate={handleUpdateEmotionsBefore} placeholder={t('mood.emotionsBefore')} selected={formik.values.emotionsBefore} onSelect={handleEmotionsBeforeSelect} onRemove={handleEmotionBeforeRemove} />
 
                     <Text style={commonStyles.subheading}>
-                        {i18n.t('mood.automaticThoughts')}
+                        {t('mood.automaticThoughts')}
                     </Text>
 
-                    <Input value={formik.values.automaticThoughts} textStyle={{ fontSize: 18 }} placeholder={i18n.t('mood.automaticThoughts')} multiline style={styles.autoComplete} onChangeText={nextValue => formik.setFieldValue('automaticThoughts', nextValue)} />
+                    <Input value={formik.values.automaticThoughts} textStyle={{ fontSize: 18 }} placeholder={t('mood.automaticThoughts')} multiline style={styles.autoComplete} onChangeText={nextValue => formik.setFieldValue('automaticThoughts', nextValue)} />
 
                     <Text style={commonStyles.subheading}>
-                        {i18n.t('mood.cognitiveDistortions')}
+                        {t('mood.cognitiveDistortions')}
                     </Text>
 
-                    <DistortionPicker onRemove={handleDistortionRemove} onSelect={handleDistortionSelect} placeholder={i18n.t('mood.cognitiveDistortions')} selected={formik.values.cognitiveDistortions} />
+                    <DistortionPicker onRemove={handleDistortionRemove} onSelect={handleDistortionSelect} placeholder={t('mood.cognitiveDistortions')} selected={formik.values.cognitiveDistortions} />
 
                     <Text style={commonStyles.subheading}>
-                        {i18n.t('mood.rationalResponse')}
+                        {t('mood.rationalResponse')}
                     </Text>
 
-                    <Input value={formik.values.rationalResponse} textStyle={{ fontSize: 18 }} placeholder={i18n.t('mood.rationalResponse')} multiline style={styles.autoComplete} onChangeText={nextValue => formik.setFieldValue('rationalResponse', nextValue)} />
+                    <Input value={formik.values.rationalResponse} textStyle={{ fontSize: 18 }} placeholder={t('mood.rationalResponse')} multiline style={styles.autoComplete} onChangeText={nextValue => formik.setFieldValue('rationalResponse', nextValue)} />
 
                     <Text style={commonStyles.subheading}>
-                        {i18n.t('mood.emotionsAfter')}
+                        {t('mood.emotionsAfter')}
                     </Text>
 
-                    <EmotionAutocomplete onEmotionUpdate={handleUpdateEmotionsAfter} placeholder={i18n.t('mood.emotionsAfter')} selected={formik.values.emotionsAfter} onSelect={handleEmotionsAfterSelect} onRemove={handleEmotionAfterRemove} />
+                    <EmotionAutocomplete onPressIn={handleScrollDownForAutocomplete} onEmotionUpdate={handleUpdateEmotionsAfter} placeholder={t('mood.emotionsAfter')} selected={formik.values.emotionsAfter} onSelect={handleEmotionsAfterSelect} onRemove={handleEmotionAfterRemove} />
 
 
                 </ScrollView>
                 <Button disabled={Object.values(formik.errors).length > 0} style={{ marginVertical: 50 }} onPress={formik.handleSubmit as any}>
-                    {() => <Text style={{ fontFamily: 'PTSans_400Regular', color: 'white', fontSize: 20 }}>{type === 'create' ? i18n.t('mood.addEntry') : i18n.t('mood.editEntry')}</Text>}
+                    {() => <Text style={{ fontFamily: 'PTSans_400Regular', color: 'white', fontSize: 20 }}>{type === 'create' ? t('mood.addEntry') : t('mood.editEntry')}</Text>}
                 </Button>
                 {/* <KeyboardSpacer topSpacing={Dimensions.get('screen').height * 0.1} /> */}
             </KeyboardAvoidingView>

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { i18n } from "../../i18n";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Divider, Layout, Text } from "@ui-kitten/components";
 import { commonStyles } from "../../styles/common";
@@ -9,11 +8,22 @@ import { Formik } from "formik";
 import { QuestionItem } from "./QuestionItem";
 import Button from "../Button";
 import { TopNavigationBar } from "../TopNavigationBar";
+import { useTranslation } from "react-i18next";
+import { createTestRecord, isUserCanTakeTest } from "../../api/TestApi";
 
 export const Test = ({ navigation }) => {
+    const { t, i18n } = useTranslation();
+    const [ canTakeTest, setCanTakeTest ] = useState({ isUserCanTakeTest: false, nextTestDate: '' });
 
-    const questions = i18n.t('test.questions') as string[]
-    const copy = i18n.t('test.copy')
+    // useEffect(() => {
+    //     console.log(t('test.questions', { returnObjects: true }));  // Check the output in the console
+    // }, [ t ]);
+
+    // return null
+
+
+    const questions = t('test.questions', { returnObjects: true }) as string[]
+    const copy = t('test.copy')
 
     const [ step, setStep ] = useState(0)
 
@@ -23,29 +33,39 @@ export const Test = ({ navigation }) => {
         [ `question${index + 1}` ]: -1
     }), {});
 
-    const shouldPassTest = false
+    useEffect(() => {
+        isUserCanTakeTest().then(setCanTakeTest)
+    }, [ isUserCanTakeTest ])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Divider />
             <TopNavigationBar />
-            <Layout style={{ height: Dimensions.get('screen').height - 100, paddingTop: 20, paddingLeft: 20 }}>
-                <Text category="h1" style={commonStyles.heading}>{i18n.t('test.title')}</Text>
+            <Layout style={{ height: Dimensions.get('screen').height - 100, paddingTop: 20, paddingHorizontal: 20 }}>
+                <Text category="h1" style={commonStyles.heading}>{t('test.title')}</Text>
 
-                {step === 0 && <Text style={{ paddingHorizontal: 20, fontSize: 20 }}>{copy}</Text>}
+                {step === 0 && <Text style={{ paddingHorizontal: 0, marginTop: 20, fontSize: 20 }}>{copy}</Text>}
 
-                {step === 0 && !shouldPassTest && <Text style={{ paddingHorizontal: 40, marginTop: 40, fontSize: 20 }}>{(i18n.t('test.blockerInfo') as (string) => string)('18.05.2024')}</Text>}
+                {step === 0 && !canTakeTest.isUserCanTakeTest && <Text style={{ paddingHorizontal: 20, marginTop: 40, fontSize: 20, textAlign: 'center' }}>{(t('test.blockerInfo', { returnObjects: true }) as (string) => string)(canTakeTest.nextTestDate)}</Text>}
 
                 {step === 0 && <Layout style={{ flexDirection: 'row', backgroundColor: 'transparent', justifyContent: 'center', marginTop: 30, gap: 20 }}>
-                    <Button textProps={{ category: 's1' }} disabled={shouldPassTest} onPress={() => setStep(1)}>{i18n.t('test.takeTest')}</Button>
-                    <Button textProps={{ category: 's1' }} onPressIn={() => navigation.navigate('Progress')}>{i18n.t('test.showProgress')}</Button>
+                    <Button textProps={{ category: 's1' }} disabled={canTakeTest.isUserCanTakeTest} onPress={() => setStep(1)}>{t('test.takeTest')}</Button>
+                    <Button textProps={{ category: 's1' }} onPressIn={() => navigation.navigate('Progress')}>{t('test.showProgress')}</Button>
                 </Layout>}
 
                 {step === 1 && <ScrollView style={styles.container}>
                     <Formik
                         initialValues={initialValues}
                         onSubmit={values => {
+                            const levelKey = Object.keys(t('test.depressionLevels')).reduce((prev, curr) => Number(curr) <= score ? curr : prev);
+                            const descriptionKey = Object.keys(t('test.depressionLevelDescriptions')).reduce((prev, curr) => Number(curr) <= score ? curr : prev);
                             const score = Object.values<number>(values).reduce((total, value) => total + value, 0);
+                            createTestRecord({
+                                score,
+                                type: 'burns',
+                                resultKey: levelKey,
+                                resultDetailsKey: descriptionKey
+                            }).then(() => console.log('Test record created'));
                             console.log(score);
                             navigation.navigate('Results', { score });
                         }}
@@ -61,7 +81,7 @@ export const Test = ({ navigation }) => {
                                         setValue={setFieldValue}
                                     />
                                 ))}
-                                <Button textProps={{ category: 's1' }} style={styles.button} onPress={handleSubmit as never}>{i18n.t('test.toResults')}</Button>
+                                <Button textProps={{ category: 's1' }} style={styles.button} onPress={handleSubmit as never}>{t('test.toResults')}</Button>
                             </Layout>
                         )}
                     </Formik>
@@ -84,5 +104,6 @@ const styles = StyleSheet.create({
     },
     button: {
         margin: 100,
+        minWidth: 130
     }
 });

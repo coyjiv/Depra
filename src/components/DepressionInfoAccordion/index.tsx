@@ -1,15 +1,17 @@
 import { View } from "react-native";
-import { i18n } from "../../i18n";
 import { Accordion } from "../Accordion";
+import { useTranslation } from "react-i18next";
 
 const DepressionInfoAccordion = () => {
+    const { t, i18n } = useTranslation()
+
     const descriptions = {
-        5: i18n.t('test.detailedDepressionLevelDescriptions.5'),
-        10: i18n.t('test.detailedDepressionLevelDescriptions.10'),
-        25: i18n.t('test.detailedDepressionLevelDescriptions.25'),
-        50: i18n.t('test.detailedDepressionLevelDescriptions.50'),
-        75: i18n.t('test.detailedDepressionLevelDescriptions.75'),
-        suicidalNote: i18n.t('test.detailedDepressionLevelDescriptions.suicidalNote')
+        5: t('test.detailedDepressionLevelDescriptions.5'),
+        10: t('test.detailedDepressionLevelDescriptions.10'),
+        25: t('test.detailedDepressionLevelDescriptions.25'),
+        50: t('test.detailedDepressionLevelDescriptions.50'),
+        75: t('test.detailedDepressionLevelDescriptions.75'),
+        suicidalNote: t('test.detailedDepressionLevelDescriptions.suicidalNote')
     };
 
     return (
@@ -19,7 +21,7 @@ const DepressionInfoAccordion = () => {
             <Accordion title="11-25" content={descriptions[ 25 ]} />
             <Accordion title="26-50" content={descriptions[ 50 ]} />
             <Accordion title="50+" content={descriptions[ 75 ]} />
-            <Accordion title={i18n.t('test.suicidalNote')} content={descriptions.suicidalNote} />
+            <Accordion title={t('test.suicidalNote')} content={descriptions.suicidalNote} />
         </View>
     );
 };
