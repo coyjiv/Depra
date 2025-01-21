@@ -22,6 +22,9 @@ export const en = {
             emailPlaceholder: "Enter your email",
             passwordPlaceholder: "Enter your password",
             incorrectEmail: "Incorrect email",
+            passwordsDontMatch: "Passwords don't match",
+            confirmPassword: "Confirm password",
+            confirmPasswordPlaceholder: "Confirm your password",
             requiredEmail: "Email is required",
             requiredPassword: "Password is required",
             shortPassword: "Password is too short"

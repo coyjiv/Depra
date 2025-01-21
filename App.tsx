@@ -1,6 +1,5 @@
 // App.js
 import React, { useState, useEffect, useCallback } from 'react';
-import { SafeAreaView, View } from 'react-native';
 import Settings from './src/views/Settings';
 import { ApplicationProvider, BottomNavigation, BottomNavigationTab, IconRegistry, Layout } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
@@ -12,7 +11,7 @@ import { EvaIconsPack } from '@ui-kitten/eva-icons';
 import { Text } from '@ui-kitten/components';
 import 'react-native-gesture-handler';
 import * as SplashScreen from 'expo-splash-screen';
-import * as Localization from 'expo-localization';
+import {getLocales} from 'expo-localization';
 import {
   useFonts,
   PTSans_400Regular,
@@ -24,12 +23,9 @@ import { Nunito_400Regular, Nunito_500Medium, Nunito_600SemiBold, Nunito_700Bold
 import { default as customMapping } from './ui-kitten-custom-mapping.json';
 import './src/i18n';
 
-
-// Import your Firebase configuration
-import app from './firebaseConfig'; // Ensure you have this file configured
+import app from './firebaseConfig';
 
 // Screens
-import { ScheduleScreen } from './src/views/ScheduleScreen';
 import Stats from './src/views/Stats';
 import Login from './src/views/Login';
 import Signup from './src/views/Signup';
@@ -38,17 +34,8 @@ import MoodScreen from './src/views/MoodScreen';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // import i18n from './src/i18n';
 import i18n from 'i18next'
-import { initReactI18next, useTranslation } from 'react-i18next';
-import translations from './src/constants/translations';
+import { useTranslation } from 'react-i18next';
 import { loadLanguage } from './src/components/LocaleSwitcher';
-import { getUserInfo } from './src/api/BaseApi';
-import useGlobalStore from './src/store';
-
-// i18n.locale = ;
-// i18n.locale = 'ua';
-
-// i18n.enableFallback = true;
-// i18n.defaultLocale = "en"
 
 SplashScreen.preventAutoHideAsync();
 
@@ -117,10 +104,12 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    console.log(getLocales()[ 0 ].languageCode);
+    
     const setupLanguage = async () => {
       const storedLanguage = await loadLanguage();
       if (storedLanguage) {
-        i18n.changeLanguage(storedLanguage);
+        i18n.changeLanguage(storedLanguage ?? getLocales()[ 0 ].languageCode);
       }
     };
 

@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Button, Select, SelectItem, IndexPath, Text, Modal, Card, Layout } from '@ui-kitten/components';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocales } from 'expo-localization';
 
 const storeLanguage = async (language) => {
     try {
@@ -14,7 +15,7 @@ const storeLanguage = async (language) => {
 export const loadLanguage = async () => {
     try {
         const language = await AsyncStorage.getItem('app_language');
-        return language || null;
+        return language || getLocales()[ 0 ].languageCode;
     } catch (error) {
         console.error('Failed to load the language', error);
         return null;
@@ -28,10 +29,9 @@ const LocaleSwitcher: React.FC = () => {
     console.log(i18n.language);
 
 
-    const locales = [ 'en', 'ru', 'ua' ];
-    console.log(i18n.language);
+    const locales = [ 'en', 'ru', 'uk' ];
 
-    const [ selectedIndex, setSelectedIndex ] = useState(new IndexPath(locales.indexOf(i18n.language.includes('en') ? 'en' : i18n.language.includes('ru') ? 'ru' : 'ua')));
+    const [ selectedIndex, setSelectedIndex ] = useState(new IndexPath(locales.indexOf(i18n.language.includes('en') ? 'en' : i18n.language.includes('ru') ? 'ru' : 'uk')));
     const [ visible, setVisible ] = useState(false);
 
     const displayNames = t('misc.languages');

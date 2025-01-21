@@ -8,6 +8,7 @@ import * as Yup from 'yup'
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useTranslation } from "react-i18next";
+import { EMAIL_REGEX } from "../utils/validators";
 
 const Signup = () => {
     const { t, i18n } = useTranslation();
@@ -15,13 +16,15 @@ const Signup = () => {
     const navigation = useNavigation();
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email(t('signup.incorrectEmail')).required(t('signup.requiredEmail')),
-        password: Yup.string().min(8, t('signup.shortPassword')).required(t('signup.requiredPassword'))
+        email: Yup.string().matches(EMAIL_REGEX, t('signup.incorrectEmail')).required(t('signup.requiredEmail')),
+        password: Yup.string().min(8, t('signup.shortPassword')).required(t('signup.requiredPassword')),
+        confirmPassword: Yup.string().oneOf([ Yup.ref('password'), null ], t('signup.passwordsDontMatch'))
     })
     const formik = useFormik({
         initialValues: {
             email: '',
-            password: ''
+            password: '',
+            confirmPassword: ''
         },
         validationSchema,
         onSubmit: values => {
@@ -59,8 +62,7 @@ const Signup = () => {
                         value={formik.values.email}
                         onChangeText={nextValue => formik.setFieldValue('email', nextValue)}
                     />
-                    {formik.errors.email ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.email}</Text> : null}
-
+                    <AnimatedErrorText error={formik.errors.email} />
                     <Input
                         label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10, marginTop: 20 }}>{t('signup.password')}</Text>}
                         size="large"
@@ -69,7 +71,10 @@ const Signup = () => {
                         value={formik.values.password}
                         onChangeText={nextValue => formik.setFieldValue('password', nextValue)}
                     />
-                    {formik.errors.password ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.password}</Text> : null}
+                    <AnimatedErrorText error={formik.errors.password} />
+
+                    <ReanimatedConfirmPassword formik={formik} t={t} />
+
                     <Button
                         style={styles.button}
                         appearance='ghost'
@@ -94,3 +99,58 @@ const styles = StyleSheet.create({
 })
 
 export default Signup
+
+
+import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import AnimatedErrorText from "../components/AnimatedErrorText";
+
+const ReanimatedConfirmPassword = ({ formik, t }) => {
+    const isVisible =
+        formik.values.password.length > 0 && !formik.errors.password;
+
+    const animatedOpacity = useAnimatedStyle(() => {
+        return {
+            opacity: withTiming(isVisible ? 1 : 0, { duration: 300 }),
+            height: withTiming(isVisible ? 105 : 0, { duration: 300 }),
+            overflow: 'hidden'
+        };
+    });
+
+    return (
+        <>
+            <Animated.View style={[animatedOpacity]}>
+                    <Input
+                        label={evaProps => (
+                            <Text
+                                {...evaProps}
+                                style={{
+                                    fontSize: 18,
+                                    marginBottom: 10,
+                                    marginTop: 20,
+                                }}
+                            >
+                                {t('signup.confirmPassword')}
+                            </Text>
+                        )}
+                        size="large"
+                        placeholder={t('signup.confirmPasswordPlaceholder')}
+                        secureTextEntry
+                        value={formik.values.confirmPassword}
+                        onChangeText={nextValue =>
+                            formik.setFieldValue('confirmPassword', nextValue)
+                        }
+                    />
+            </Animated.View>
+            <AnimatedErrorText error={formik.errors.confirmPassword} customCriteria={formik.values.password.length > 0 &&
+            !formik.errors.password} />
+
+            {/* {formik.errors.confirmPassword &&
+            formik.values.password.length > 0 &&
+            !formik.errors.password ? (
+                <Text style={{ color: 'red', marginTop: 10 }}>
+                    {formik.errors.confirmPassword}
+                </Text>
+            ) : null} */}
+        </>
+    );
+};

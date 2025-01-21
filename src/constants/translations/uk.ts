@@ -1,5 +1,5 @@
 
-export const ua = {
+export const uk = {
     translation: {
         login: {
             title: "Логін",
@@ -22,6 +22,9 @@ export const ua = {
             emailPlaceholder: "Введіть вашу пошту",
             passwordPlaceholder: "Введіть ваш пароль",
             incorrectEmail: "Некоректна пошта",
+            passwordsDontMatch: "Паролі не співпадають",
+            confirmPassword: "Підтвердіть пароль",
+            confirmPasswordPlaceholder: "Підтвердіть ваш пароль",
             requiredEmail: "Пошта обов'язкова",
             requiredPassword: "Пароль обов'язковий",
             shortPassword: "Пароль занадто короткий"

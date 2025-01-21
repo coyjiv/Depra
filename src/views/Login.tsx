@@ -1,21 +1,22 @@
 import { Button, Input, Layout, Text } from "@ui-kitten/components"
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
-import { Alert, Dimensions, StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebaseConfig";
 import { useTranslation } from "react-i18next";
+import { EMAIL_REGEX } from "../utils/validators";
+import AnimatedErrorText from "../components/AnimatedErrorText";
 
 const Login = () => {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
 
     const navigation = useNavigation();
 
     const validationSchema = Yup.object().shape({
-        email: Yup.string().email(t('login.incorrectEmail')).required(t('login.requiredEmail')),
+        email: Yup.string().matches(EMAIL_REGEX, t('login.incorrectEmail')).required(t('login.requiredEmail')),
         password: Yup.string().required(t('login.requiredPassword'))
     })
     const formik = useFormik({
@@ -43,9 +44,6 @@ const Login = () => {
 
     })
 
-    useEffect(() => {
-        console.log(formik.errors)
-    }, [ formik.errors ])
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Layout style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 30 }}>
@@ -60,7 +58,8 @@ const Login = () => {
                         value={formik.values.email}
                         onChangeText={nextValue => formik.setFieldValue('email', nextValue)}
                     />
-                    {formik.errors.email ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.email}</Text> : null}
+                    <AnimatedErrorText error={formik.errors.email} />
+                    {/* {formik.errors.email && formik.touched.email ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.email}</Text> : null} */}
 
                     <Input
                         label={evaProps => <Text {...evaProps} style={{ fontSize: 18, marginBottom: 10, marginTop: 20 }}>{t('login.password')}</Text>}
@@ -70,11 +69,12 @@ const Login = () => {
                         value={formik.values.password}
                         onChangeText={nextValue => formik.setFieldValue('password', nextValue)}
                     />
-                    {formik.errors.password ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.password}</Text> : null}
+                    <AnimatedErrorText error={formik.errors.password} />
+                    {/* {formik.errors.password && formik.touched.password ? <Text style={{ color: 'red', marginTop: 10 }}>{formik.errors.password}</Text> : null} */}
                     <Button
                         style={styles.button}
                         appearance='ghost'
-
+                        disabled={formik.isSubmitting || !formik.isValid}
                         status='primary'
                         onPress={() => navigation.navigate('Register' as never)}
                     >
