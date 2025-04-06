@@ -19,12 +19,7 @@ export const DaySelect = () => {
 
     const [ isExpanded, setIsExpanded ] = useState(false);
 
-
-
-    const start = startOfWeek(startOfMonth(today), { weekStartsOn: 1 });
-    const end = endOfWeek(endOfMonth(today), { weekStartsOn: 1 });
-
-    const { currentMonthDays, previousMonthDays, nextMonthDays } = getClosestMonthsDays(visibleMonth, i18n.language);
+    const [{ currentMonthDays, previousMonthDays, nextMonthDays }, updateClosestMonthDays] = useState(getClosestMonthsDays(visibleMonth, i18n.language));
 
 
     const handleExpand = () => {
@@ -46,7 +41,6 @@ export const DaySelect = () => {
         }
     };
     
-    console.log("visible month", visibleMonth);
     const monthToRender = [
         <MonthCalendar
             key={1}
@@ -68,7 +62,7 @@ export const DaySelect = () => {
             translateY={translateY}
             height={height}
             selectedDate={selectedDate}
-            monthDate={visibleMonth}
+            monthDate={visibleMonth.clone()}
         />,
         <MonthCalendar
             key={3}
@@ -84,7 +78,7 @@ export const DaySelect = () => {
     ]
 
     return (
-        <MonthSwiperController monthToRender={monthToRender} >
+        <MonthSwiperController monthToRender={monthToRender} updateClosestMonthDays={updateClosestMonthDays}>
             {monthToRender}
         </MonthSwiperController>
     )

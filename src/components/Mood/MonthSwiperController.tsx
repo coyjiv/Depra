@@ -3,12 +3,12 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler"
 import Animated, { runOnJS, useSharedValue, withTiming } from "react-native-reanimated";
 import { Dimensions } from 'react-native';
 import { format } from "date-fns";
-import { languageResolver } from "../../utils/date";
+import { getClosestMonthsDays } from "../../utils/date";
 import { useTranslation } from "react-i18next";
 import { useEffect } from "react";
 import { useMoodStore } from "../../store/moodDiarySlice";
 
-export const MonthSwiperController = ({ children, monthToRender }) => {
+export const MonthSwiperController = ({ children, monthToRender, updateClosestMonthDays }) => {
     const { i18n } = useTranslation();
     const { selectedDate, setSelectedDate: handleSelect, setVisibleMonth, visibleMonth } = useMoodStore(state => state);
 
@@ -20,16 +20,18 @@ export const MonthSwiperController = ({ children, monthToRender }) => {
 
     const translateX = useSharedValue(0);
 
-    useEffect(()=>{
+    useEffect(() => {
         translateX.value = -screenWidth;
     }, [])
 
     const swipeToNextMonth = () => {
         setVisibleMonth(visibleMonth.clone().add(1, 'month'))
+        updateClosestMonthDays(getClosestMonthsDays(visibleMonth.clone().add(1, 'month'), i18n.language));
     };
 
     const swipeToPreviousMonth = () => {
         setVisibleMonth(visibleMonth.clone().subtract(1, 'month'));
+        updateClosestMonthDays(getClosestMonthsDays(visibleMonth.clone().subtract(1, 'month'), i18n.language));
     };
 
 
@@ -43,22 +45,16 @@ export const MonthSwiperController = ({ children, monthToRender }) => {
             const threshold = 50;
 
             if (e.translationX < -threshold && !isTransitioning.value) {
-                runOnJS(swipeToNextMonth)();
                 // свайп влево — следующий месяц
                 isTransitioning.value = true;
                 translateX.value = withTiming(-screenWidth * 2, {}, () => {
                     runOnJS(swipeToNextMonth)();
-                    translateX.value = -screenWidth;
-                    isTransitioning.value = false;
                 });
             } else if (e.translationX > threshold && !isTransitioning.value) {
                 // свайп вправо — предыдущий месяц
-                runOnJS(swipeToPreviousMonth)();
                 isTransitioning.value = true;
                 translateX.value = withTiming(0, {}, () => {
                     runOnJS(swipeToPreviousMonth)();
-                    translateX.value = -screenWidth;
-                    isTransitioning.value = false;
                 });
             } else {
                 // недосвайп — вернуться в центр
@@ -66,10 +62,27 @@ export const MonthSwiperController = ({ children, monthToRender }) => {
             }
         });
 
-        useEffect(() => {
-            console.log("VISIBLE MONTH UPDATED:", visibleMonth.format('MMMM'));
-          }, [visibleMonth]);
-        
+    // useEffect(() => {
+    //     console.log("VISIBLE MONTH UPDATED:", visibleMonth.format('MMMM'));
+    // }, [ visibleMonth ]);
+
+    useEffect(() => {
+        if (isTransitioning.value) {
+            let timeout;
+            requestAnimationFrame(() => {
+                timeout = setTimeout(() => {
+                    translateX.value = -screenWidth;
+                    isTransitioning.value = false;    
+                }, 1000);
+            });
+            return () => {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+            };
+        }
+    }, [ visibleMonth ]);
+
 
     return (
         <GestureDetector gesture={panGesture}>

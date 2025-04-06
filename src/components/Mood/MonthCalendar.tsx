@@ -6,7 +6,6 @@ import Animated, { SharedValue } from "react-native-reanimated"
 import { Day } from "./Day"
 import { useTranslation } from "react-i18next"
 import moment from "moment"
-import { useMoodStore } from "../../store/moodDiarySlice"
 
 interface MonthCalendarProps {
     handleExpand: () => void
@@ -20,9 +19,8 @@ interface MonthCalendarProps {
 }
 
 export const MonthCalendar = ({ handleExpand, handleSelect, height, translateY, isExpanded, calendarDays, selectedDate, monthDate }: MonthCalendarProps) => {
-    const visibleMonth = useMoodStore(state => state.visibleMonth)
 
-    const { t, i18n } = useTranslation();
+    const { i18n } = useTranslation();
 
     const today = new Date();
 
@@ -44,9 +42,9 @@ export const MonthCalendar = ({ handleExpand, handleSelect, height, translateY, 
     }
 
     const isSelected = (date: Date, selectedDate: Date) => {
-        console.log('date', date);
-        console.log('selectedDate', selectedDate);
-        console.log(isSameDay(date, selectedDate));
+        // console.log('date', date);
+        // console.log('selectedDate', selectedDate);
+        // console.log(isSameDay(date, selectedDate));
 
 
         return isSameDay(selectedDate, date);
@@ -62,7 +60,7 @@ export const MonthCalendar = ({ handleExpand, handleSelect, height, translateY, 
             <Animated.View style={{ height: '100%', width: 100 / 3 + '%' as any }}>
                 <View style={{ backgroundColor: 'white', borderRadius: 10, margin: 10, paddingTop: 10, paddingBottom: 5, paddingHorizontal: 10 }}>
                     <TouchableOpacity onPress={handleExpand}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
                             <Text style={{ fontSize: 20 }}>{month} {year}</Text>
                             <Animated.View style={{ transform: [ { rotate: isExpanded ? '180deg' : '0deg' } ] }}>
                                 <Icon

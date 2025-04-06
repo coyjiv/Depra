@@ -93,20 +93,21 @@ export const getMonthDays = (start, end) => {
 //     }
 // }
 
+const getDays = (date: moment.Moment) => {
+  const start = startOfWeek(startOfMonth(date.toDate()), { weekStartsOn: 1 });
+  const end = endOfWeek(endOfMonth(date.toDate()), { weekStartsOn: 1 });
+  return eachDayOfInterval({ start, end }).map((d, i) => ({
+    key: i,
+    dayNumber: format(d, 'd'),
+    isToday: isToday(d),
+    isCurrentMonth: d.getMonth() === date.month(),
+    date: d,
+  }));
+};
+
 export const getClosestMonthsDays = (selectedDate: moment.Moment, locale: string) => {
     const base = selectedDate.clone();
   
-    const getDays = (date: moment.Moment) => {
-      const start = startOfWeek(startOfMonth(date.toDate()), { weekStartsOn: 1 });
-      const end = endOfWeek(endOfMonth(date.toDate()), { weekStartsOn: 1 });
-      return eachDayOfInterval({ start, end }).map((d, i) => ({
-        key: i,
-        dayNumber: format(d, 'd'),
-        isToday: isToday(d),
-        isCurrentMonth: d.getMonth() === date.month(),
-        date: d,
-      }));
-    };
   
     return {
       previousMonthDays: getDays(base.clone().subtract(1, 'month')),
