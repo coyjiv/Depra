@@ -141,8 +141,7 @@ const ReanimatedConfirmPassword = ({ formik, t }) => {
                         }
                     />
             </Animated.View>
-            <AnimatedErrorText error={formik.errors.confirmPassword} customCriteria={formik.values.password.length > 0 &&
-            !formik.errors.password} />
+            <AnimatedErrorText error={formik.errors.confirmPassword} customCriteria={formik.values.password.length > 0} />
 
             {/* {formik.errors.confirmPassword &&
             formik.values.password.length > 0 &&

@@ -3,10 +3,12 @@ import { Button, Select, SelectItem, IndexPath, Text, Modal, Card, Layout } from
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales } from 'expo-localization';
+import moment from 'moment';
 
 const storeLanguage = async (language) => {
     try {
         await AsyncStorage.setItem('app_language', language);
+        moment.locale(language);
     } catch (error) {
         console.error('Failed to save the language', error);
     }
@@ -15,6 +17,7 @@ const storeLanguage = async (language) => {
 export const loadLanguage = async () => {
     try {
         const language = await AsyncStorage.getItem('app_language');
+        moment.locale(language);
         return language || getLocales()[ 0 ].languageCode;
     } catch (error) {
         console.error('Failed to load the language', error);
@@ -40,6 +43,7 @@ const LocaleSwitcher: React.FC = () => {
     const handleConfirm = () => {
         const newLanguage = locales[ selectedIndex.row ];
         i18n.changeLanguage(newLanguage);
+        moment.locale(newLanguage);
         storeLanguage(newLanguage);
         setVisible(false);
     };

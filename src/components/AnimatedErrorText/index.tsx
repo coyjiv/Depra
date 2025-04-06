@@ -2,8 +2,8 @@ import React from 'react';
 import { Text } from 'react-native';
 import Animated, { useAnimatedStyle, withTiming } from 'react-native-reanimated';
 
-const AnimatedErrorText = ({ error, customCriteria=false }:{error:string; customCriteria?:boolean}) => {
-    const isVisible = !!error && customCriteria;
+const AnimatedErrorText = ({ error, customCriteria=true }:{error:string; customCriteria?:boolean}) => {
+    const isVisible = !!error && customCriteria
     const animatedStyle = useAnimatedStyle(() => {
         return {
             opacity: withTiming(isVisible ? 1 : 0, { duration: 300 }),

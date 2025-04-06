@@ -1,20 +1,9 @@
-import { Divider, Layout, Text } from "@ui-kitten/components"
-import moment from "moment";
-import { useContext, useState } from "react";
-import { StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context"
-import 'moment/locale/ru';
-import InfinitePager from 'react-native-infinite-pager'
-import { Page } from "../components/Mood/Page";
-import { TopNavigationBar } from "../components/TopNavigationBar";
-// import { i18n } from "../i18n";
+import { Text } from "@ui-kitten/components"
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { MoodCreationModal } from "../components/Mood/MoodCreationModal";
-import MoodForm from "../components/Mood/MoodForm";
 import ViewRecord from "../components/Mood/ViewRecord";
-import { MoodData, MoodDoc } from "../../types";
-import { commonStyles } from "../styles/common";
+import { MoodDoc } from "../../types";
 import { useTranslation } from "react-i18next";
+import { MoodScreenHome } from "../components/Mood/MoodScreenHome";
 
 
 type RootStackParamList = {
@@ -35,41 +24,4 @@ const MoodScreen = () => {
 
 }
 
-const styles = StyleSheet.create({
-    flex: { flex: 1 },
-    heading: {
-        fontSize: 35,
-        // paddingTop: 20,
-        paddingLeft: 20,
-        fontWeight: 'bold'
-    }
-});
-
 export default MoodScreen
-
-
-export const MoodScreenHome = () => {
-    const { t, i18n } = useTranslation();
-
-    const [ selectedDate, setSelectedDate ] = useState(moment());
-
-    const handleSelect = (index) => {
-        setSelectedDate(moment().add(index, 'days'));
-    };
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Divider />
-            <TopNavigationBar />
-            <Layout style={{ padding: 0 }}>
-                <Text category="h1" style={commonStyles.heading}>{t('tabs.moodDiary')}</Text>
-                <InfinitePager
-                    PageComponent={Page}
-                    maxIndex={0}
-                    style={styles.flex}
-                    pageWrapperStyle={styles.flex}
-                    onPageChange={handleSelect}
-                />
-            </Layout>
-        </SafeAreaView>
-    )
-}

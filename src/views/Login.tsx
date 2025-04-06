@@ -9,6 +9,7 @@ import { auth } from "../../firebaseConfig";
 import { useTranslation } from "react-i18next";
 import { EMAIL_REGEX } from "../utils/validators";
 import AnimatedErrorText from "../components/AnimatedErrorText";
+import { useEffect } from "react";
 
 const Login = () => {
     const { t } = useTranslation();
@@ -37,11 +38,16 @@ const Login = () => {
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-
+                    console.log(errorCode, errorMessage);
+                    
                     Alert.alert(t('errors.error'), `${t(`errors.${errorCode}`)}: ${errorMessage}`);
                 });
         },
 
+    })
+
+    useEffect(()=>{
+        console.log(formik.errors)
     })
 
     return (
