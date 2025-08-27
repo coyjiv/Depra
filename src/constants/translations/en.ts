@@ -41,7 +41,7 @@ export const en = {
         tabs: {
             moodDiary: "Mood Diary",
             test: "Test",
-            progress: "Progress",
+            home: "Dashboard",
         },
         mood: {
             today: "Today is",
@@ -164,7 +164,7 @@ It's a good idea to take it once a week to see whether your treatment options ar
             edit: 'Edit'
         },
         progress: {
-            title: 'Your progress',
+            title: 'Your dashboard',
             description: 'Here you can view your progress with your depression. Your progress will show up in different forms of graph, or just stats. Enjoy',
             calculateProgress: 'Calculate progress',
             lackOfData: 'Lack of data',

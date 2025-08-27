@@ -1,7 +1,7 @@
 // App.js
 import React, { useState, useEffect, useCallback } from 'react';
 import Settings from './src/views/Settings';
-import { ApplicationProvider, BottomNavigation, BottomNavigationTab, IconRegistry, Layout } from '@ui-kitten/components';
+import { ApplicationProvider, BottomNavigation, BottomNavigationTab, Icon, IconRegistry, Layout } from '@ui-kitten/components';
 import * as eva from '@eva-design/eva';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -54,18 +54,18 @@ const BottomTabBar = ({ navigation, state }) => {
   const { t } = useTranslation()
   return (
     <BottomNavigation selectedIndex={state.index} onSelect={index => navigation.navigate(state.routeNames[ index ])}>
-      <BottomNavigationTab title={t('tabs.moodDiary')} />
-      <BottomNavigationTab title={t('tabs.test')} />
-      <BottomNavigationTab title={t('tabs.progress')} />
+      <BottomNavigationTab title={t('tabs.home')} icon={<Icon name='home-outline' />} />
+      <BottomNavigationTab title={t('tabs.moodDiary')} icon={<Icon name='calendar-outline'/>} />
+      <BottomNavigationTab title={t('tabs.test')} icon={<Icon name='checkmark-square-outline' />}/>
     </BottomNavigation>
   )
 };
 
 const AppTabs = () => (
   <Tab.Navigator screenOptions={{ headerShown: false }} tabBar={props => <BottomTabBar {...props} />}>
+    <Tab.Screen name="Dashboard" component={Stats} />
     <Tab.Screen name="MoodDiary" component={MoodScreen} />
     <Tab.Screen name="TestRoot" component={Test} />
-    <Tab.Screen name="Progress" component={Stats} />
   </Tab.Navigator>
 );
 

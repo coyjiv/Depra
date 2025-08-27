@@ -41,7 +41,7 @@ export const uk = {
         tabs: {
             moodDiary: "Щоденник настрою",
             test: "Тест",
-            progress: "Прогрес",
+            home: "Головна",
         },
         mood: {
             today: "Сьогодні",

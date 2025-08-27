@@ -70,16 +70,11 @@ export const MonthSwiperController = ({ children, monthToRender, updateClosestMo
         if (isTransitioning.value) {
             let timeout;
             requestAnimationFrame(() => {
-                timeout = setTimeout(() => {
+                // timeout = setTimeout(() => {
                     translateX.value = -screenWidth;
                     isTransitioning.value = false;    
-                }, 1000);
+                // }, 1000);
             });
-            return () => {
-                if (timeout) {
-                    clearTimeout(timeout);
-                }
-            };
         }
     }, [ visibleMonth ]);
 

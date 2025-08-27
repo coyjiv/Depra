@@ -52,15 +52,15 @@ export const MonthCalendar = ({ handleExpand, handleSelect, height, translateY, 
 
     const month = format(monthDate.toDate(), 'MMMM', { locale: languageResolver(i18n.language) });
     const year = monthDate.year();
-    
 
-    
+
+
     return (
         <>
             <Animated.View style={{ height: '100%', width: 100 / 3 + '%' as any }}>
                 <View style={{ backgroundColor: 'white', borderRadius: 10, margin: 10, paddingTop: 10, paddingBottom: 5, paddingHorizontal: 10 }}>
-                    <TouchableOpacity onPress={handleExpand}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
+                    <TouchableOpacity onPressIn={handleExpand}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 5 }}>
                             <Text style={{ fontSize: 20 }}>{month} {year}</Text>
                             <Animated.View style={{ transform: [ { rotate: isExpanded ? '180deg' : '0deg' } ] }}>
                                 <Icon
@@ -87,7 +87,7 @@ export const MonthCalendar = ({ handleExpand, handleSelect, height, translateY, 
                                 <View style={DaySelectStyles.nonExpandedView}>
                                     {calendarDays.map(({ key, dayNumber, isToday, date }, i) => (
                                         <Day isSelected={isSelected(selectedDate.toDate(), date)} handleSelect={() => handleSelect(moment(date))} key={i} isToday={isToday} isInCurrentMonth={isInCurrentMonth(date)}>
-                                            <Text style={isSelected(selectedDate.toDate(), date)? DaySelectStyles.selectedDayText: isToday ? DaySelectStyles.todayText : isInCurrentMonth(date) ? {} : { color: 'gray' }}>
+                                            <Text style={isSelected(selectedDate.toDate(), date) ? DaySelectStyles.selectedDayText : isToday ? DaySelectStyles.todayText : isInCurrentMonth(date) ? {} : { color: 'gray' }}>
                                                 {dayNumber}
                                             </Text>
                                         </Day>
@@ -119,6 +119,5 @@ const DaySelectStyles = StyleSheet.create({
     selectedDayText: {
         fontWeight: 'bold',
         lineHeight: 19,
-        color: 'green'
     },
 })

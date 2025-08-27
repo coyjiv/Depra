@@ -26,12 +26,17 @@ export const DaySelect = () => {
         
         setIsExpanded(!isExpanded);
         height.value = withTiming(isExpanded ? 100 : 300, {
-            duration: 500,
+            duration: 200,
         });
         
         const selectedWeekIndex = getWeekOfMonth(selectedDate.toDate(), { weekStartsOn: 0 }) - 1;
         const rowHeight = 50;
         const offsetY = -selectedWeekIndex * rowHeight;
+        
+        console.log(`selectedWeekIndex: ${selectedWeekIndex}, offsetY: ${offsetY}`);
+
+        console.log(selectedDate.toDate());
+        
         
         
         if (!isExpanded) {
